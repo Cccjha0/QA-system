@@ -19,7 +19,9 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed()) {
             try {
                 Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+                //System.out.println("数据库驱动程序加载成功");
                 connection = DriverManager.getConnection(URL);
+                //System.out.print("连接数据库成功");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
