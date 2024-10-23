@@ -11,7 +11,7 @@ import java.sql.*;
  * @author 陈炯昊
  */
 public class QADAO {
-    public void insertQA(QA qa) {
+    public static void insertQA(QA qa) {
         String query = "INSERT INTO QA (question, answer, created_by) VALUES (?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -24,7 +24,7 @@ public class QADAO {
         }
     }
     
-    public ResultSet searchQA(String keyword) {
+    public static ResultSet searchQA(String keyword) {
         ResultSet rs = null;
         String query = "SELECT question, answer FROM QA WHERE question LIKE ?";
         try (Connection connection = DatabaseConnection.getConnection();

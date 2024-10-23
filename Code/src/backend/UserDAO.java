@@ -15,7 +15,7 @@ public class UserDAO {
     /**
      * return UserID
      **/
-    public int registerUser(User user) {
+    public static int registerUser(User user) {
         int userId = 0;
         String query = "INSERT INTO Users (password, name, isStudent) VALUES (?, ?, ?)";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -27,6 +27,7 @@ public class UserDAO {
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 userId = generatedKeys.getInt(1);
+                user.setId(userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,7 +40,7 @@ public class UserDAO {
      * ruturn 0 老师，1 学生
      *
      */
-    public boolean loginUser(int id, String password) {
+    public static boolean loginUser(int id, String password) {
         String query = "SELECT name FROM Users WHERE id=? AND password=?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
