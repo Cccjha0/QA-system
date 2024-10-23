@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 public class Loginframe {
     static JFrame loginframe = new JFrame("Login");
 
@@ -101,10 +103,10 @@ public class Loginframe {
     public static void registerpanelComponents(JPanel registerpanel){
         registerpanel.setLayout(null);
 
-        JLabel userLabel = new JLabel("Set ID:");
+        JLabel userLabel = new JLabel("Real Name:");
         userLabel.setBounds(10,40,80,25);
         registerpanel.add(userLabel);
-        //输入ID的文本框
+        //输入Name的文本框
         JTextField userText = new JTextField(20);
         userText.setBounds(110,40,240,25);
         registerpanel.add(userText);
@@ -116,9 +118,22 @@ public class Loginframe {
         JPasswordField passwordText = new JPasswordField(20);
         passwordText.setBounds(110,90,240,25);
         registerpanel.add(passwordText);
+        
+        JCheckBox checkBox = new JCheckBox("Is Student");
+        checkBox.setBounds(30, 130, 120, 25);
+        checkBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange()==ItemEvent.SELECTED) {
+                    
+                }else{}
+            }
+        });
+        registerpanel.add(checkBox);
+        
         // 登录按钮
-        JButton registerButton = new JButton("Register and Login");
-        registerButton.setBounds(50, 140, 140, 40);
+        JButton registerButton = new JButton("Register");
+        registerButton.setBounds(50, 160, 140, 40);
         registerpanel.add(registerButton);
         registerButton.addActionListener(new ActionListener() {
             @Override
@@ -128,8 +143,8 @@ public class Loginframe {
             }
         });
 
-        JButton CancelButton = new JButton("Cancel");
-        CancelButton.setBounds(210, 140, 140, 40);
+        JButton CancelButton = new JButton("Back");
+        CancelButton.setBounds(210, 160, 140, 40);
         CancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
