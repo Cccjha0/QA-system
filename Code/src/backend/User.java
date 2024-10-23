@@ -15,8 +15,7 @@ public class User {
     private String password;
     private boolean isStudent;
 
-    public User(int id, String name, String password, boolean isStudent) {
-        this.id = id;
+    public User(String name, String password, boolean isStudent) {
         this.name = name;
         this.password = password;
         this.isStudent = isStudent;

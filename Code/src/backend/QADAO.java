@@ -4,6 +4,7 @@
  */
 package backend;
 
+import java.security.interfaces.RSAKey;
 import java.sql.*;
 /**
  *
@@ -23,18 +24,16 @@ public class QADAO {
         }
     }
     
-    public void searchQA(String keyword) {
+    public ResultSet searchQA(String keyword) {
+        ResultSet rs = null;
         String query = "SELECT question, answer FROM QA WHERE question LIKE ?";
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + keyword + "%");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                System.out.println("Quesiton: " + rs.getString("question"));
-                System.out.println("Answer: " + rs.getString("answer"));
-            }
+            rs = statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rs;
     }
 }

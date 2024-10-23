@@ -12,16 +12,26 @@ import java.sql.*;
  */
 public class UserDAO {
 
-    public void registerUser(User user) {
+    /**
+     * return UserID
+     **/
+    public int registerUser(User user) {
+        int userId = 0;
         String query = "INSERT INTO Users (password, name, isStudent) VALUES (?, ?, ?)";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getPassword());
             statement.setString(2, user.getName());
             statement.setBoolean(3, user.isStudent());
             statement.executeUpdate();
+            
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                userId = generatedKeys.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return userId;
     }
 
     /**
