@@ -8,6 +8,7 @@ package GUI;
  *
  * @author peter
  */
+import backend.User;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -194,7 +195,7 @@ public class QAframe {
         });
     }
 
-    /**public static void genTextArea(JPanel panel, int n){
+    public static void genTextArea(JPanel panel, int n){
         for (int i = 0; i < n; i++) {
             JTextArea textArea = new JTextArea(3, 55);
             JScrollPane jScrollPane = new JScrollPane(textArea);
@@ -211,37 +212,6 @@ public class QAframe {
         panel.revalidate();
         panel.repaint();
         panel.setVisible(true);
-    }**/
-
-    public static void genTextArea(JPanel panel, int n) {
-        for (int i = 0; i < n; i++) {
-            JTextArea aArea = new JTextArea(3, 55);
-            aArea.setLineWrap(true);
-            aArea.setWrapStyleWord(true);
-
-            // 根据内容计算高度
-            int lineCount = aArea.getLineCount();
-            int height = Math.min(lineCount * 25, 100); // 25是每行的高度，100是最大高度
-            aArea.setPreferredSize(new Dimension(650, height));
-            panel.add(aArea);
-
-            JTextArea qArea = new JTextArea(3, 55);
-            qArea.setLineWrap(true);
-            qArea.setWrapStyleWord(true);
-
-            lineCount = qArea.getLineCount();
-            height = Math.min(lineCount * 25, 100); // 25是每行的高度，100是最大高度
-            qArea.setPreferredSize(new Dimension(650, height));
-            panel.add(Box.createVerticalStrut(7));
-            panel.add(qArea);
-
-            if (i < n - 1) {
-                panel.add(Box.createVerticalStrut(25));
-            }
-            aArea.revalidate();
-            qArea.revalidate();
-        }
-        panel.revalidate();
-        panel.repaint();
     }
+
 }
