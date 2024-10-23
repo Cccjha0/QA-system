@@ -15,16 +15,18 @@ public class QA {
     private int createdBy;
     private String createdAt;
     
-    public QA(int id, String question, String answer, int createdBy, String createdAt) {
-        this.id = id;
+    public QA(String question, String answer, int createdBy) {
         this.question = question;
         this.answer = answer;
         this.createdBy = createdBy;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
         return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getQuestion() {

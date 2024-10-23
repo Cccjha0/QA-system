@@ -36,19 +36,24 @@ public class UserDAO {
 
     /**
      *
-     * ruturn 0 老师，1 学生
+     * return null 失败
      *
      */
-    public boolean loginUser(int id, String password) {
-        String query = "SELECT name FROM Users WHERE id=? AND password=?";
+    public User loginUser(int id, String password) {
+        User user = null;
+        String query = "SELECT name, isStudent FROM Users WHERE id=? AND password=?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
+            if (resultSet.next()) {
+                user = new User(resultSet.getString(1), password, resultSet.getBoolean(2));
+                user.setId(id);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return user;
         }
+        return user;
     }
 }
