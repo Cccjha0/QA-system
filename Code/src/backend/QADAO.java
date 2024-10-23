@@ -6,16 +6,16 @@ package backend;
 
 import java.security.interfaces.RSAKey;
 import java.sql.*;
+
 /**
  *
  * @author 陈炯昊
  */
 public class QADAO {
-    public void insertQA(QA qa) {
-		public static boolean insertQA(QA qa) {
+
+    public static boolean insertQA(QA qa) {
         String query = "INSERT INTO QA (question, answer, created_by) VALUES (?, ?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, qa.getQuestion());
             statement.setString(2, qa.getAnswer());
             statement.setInt(3, qa.getCreatedBy());
@@ -26,12 +26,11 @@ public class QADAO {
         }
         return true;
     }
-    
+
     public static ResultSet searchQA(String keyword) {
         ResultSet rs = null;
         String query = "SELECT question, answer FROM QA WHERE question LIKE ?";
-        try (Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + keyword + "%");
             rs = statement.executeQuery();
         } catch (SQLException e) {

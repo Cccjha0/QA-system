@@ -14,8 +14,9 @@ public class UserDAO {
 
     /**
      * return UserID
-     **/
-    public static int registerUser(User user) { 
+     *
+     */
+    public static int registerUser(User user) {
         int userId = 0;
         String query = "INSERT INTO Users (password, name, isStudent) VALUES (?, ?, ?)";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -23,11 +24,11 @@ public class UserDAO {
             statement.setString(2, user.getName());
             statement.setBoolean(3, user.isStudent());
             statement.executeUpdate();
-            
+
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 userId = generatedKeys.getInt(1);
-                user.setId(userId); 
+                user.setId(userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,27 +38,26 @@ public class UserDAO {
 
     /**
      *
-     * ruturn 0 老师，1 学生 
-     * return null 失败 
+     *
+     * return null 失败
      *
      */
-    public boolean loginUser(int id, String password) { 
-        String query = "SELECT name FROM Users WHERE id=? AND password=?"; 
- 		public static boolean loginUser(int id, String password) {
-        String query = "SELECT name FROM Users WHERE id=? AND password=?";
+    public static User loginUser(int id, String password) {
+        User user = null;
+        String query = "SELECT name, isStudent FROM Users WHERE id=? AND password=?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next(); 
-            if (resultSet.next()) { 
-                user = new User(resultSet.getString(1), password, resultSet.getBoolean(2)); 
-                user.setId(id); 
-            } 
+
+            if (resultSet.next()) {
+                user = new User(resultSet.getString(1), password, resultSet.getBoolean(2));
+                user.setId(id);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return user; 
+            return user;
         }
-        return user; 
+        return user;
     }
 }
