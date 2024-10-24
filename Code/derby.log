@@ -1,10 +1,13 @@
 ----------------------------------------------------------------
-Tue Oct 15 19:42:26 CST 2024D001 : [0] The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585), [1] a816c00e-0192-8ffc-8e02-00000f408fa0, [2] E:\learn\PDC\PDC Project\QA system\db\QAsystemDB, [3] jdk.internal.loader.ClassLoaders$AppClassLoader@5fe5c6f, [4] file:/E:/learn/PDC/PDC%20Project/QA%20system/Code/lib/derby.jar
+Thu Oct 24 14:50:49 CST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0192-bd4a-d088-00000ee849a0 
+on database directory /Users/peter/QAsystem/QA-system/Code/..\db\QAsystemDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@277050dc 
+Loaded from file:/Users/peter/QAsystem/QA-system/Code/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=11.0.15.1+2-LTS-10
-user.dir=E:\learn\PDC\PDC Project\QA system\Code
-os.name=Windows 11
-os.arch=amd64
-os.version=10.0
+java.runtime.version=11.0.24+7-LTS-271
+user.dir=/Users/peter/QAsystem/QA-system/Code
+os.name=Mac OS X
+os.arch=aarch64
+os.version=15.0.1
 derby.system.home=null
-C005 : [0] 
+Database Class Loader started - derby.database.classpath=''

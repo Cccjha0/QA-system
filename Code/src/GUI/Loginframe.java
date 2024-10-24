@@ -2,22 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package GUI;
 
-/**
- *
- * @author peter
- */
 import backend.*;
-import backend.UserDAO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.Arrays;
 
-public class Loginframe {
+public class LoginFrame {
 
     JFrame loginframe = new JFrame("Login");
 
@@ -29,8 +24,12 @@ public class Loginframe {
     JPanel mainpanel = new JPanel(new CardLayout());
     JPanel loginpanel = new JPanel();
     JPanel registerpanel = new JPanel();
+    
+    JLabel failedLabel = new JLabel("Failed login, ID or password is incorrect.");
+    JLabel passwordFailLabel = new JLabel("Failed login, password is necessary.");
+    JLabel idFailLabel = new JLabel("Failed login, ID is necessary.");
 
-    public Loginframe() {
+    public LoginFrame() {
         loginframe.setSize(400, 250);
         loginframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -51,7 +50,7 @@ public class Loginframe {
         JLabel userLabel = new JLabel("ID:");
         userLabel.setBounds(10, 40, 80, 25);
         panel.add(userLabel);
-        //输入ID的文本框
+
         JTextField userText = new JTextField(20);
         userText.setBounds(100, 40, 240, 25);
         panel.add(userText);
@@ -59,51 +58,78 @@ public class Loginframe {
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setBounds(10, 80, 80, 25);
         panel.add(passwordLabel);
-        //输入密码的文本框
+
         JPasswordField passwordText = new JPasswordField(20);
         passwordText.setBounds(100, 80, 240, 25);
         panel.add(passwordText);
 
-        JLabel failedLabel = new JLabel("Failed login, ID or password is incorrect.");
         failedLabel.setBounds(95, 170, 300, 25);
-        // 登录按钮
+        passwordFailLabel.setBounds(95, 170, 300, 25);
+        idFailLabel.setBounds(95, 170, 300, 25);
+
         JButton loginButton = new JButton("Login");
         loginButton.setBounds(100, 120, 100, 40);
         panel.add(loginButton);
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panel.remove(failedLabel);//删除之前的报错标签
-                User user = backend.UserDAO.loginUser(Integer.parseInt(userText.getText()), passwordText.getPassword().toString());
-
-                if (user != null) {
-                    boolean right = user.isStudent();
-                    if (right) {//是学生
-                        loginframe.dispose();
-                        QAframe qAframe = new QAframe(user);
-                     
-                    } else if (!right) {
-                        loginframe.dispose();
-                        QAframe qAframe = new QAframe(user);
-                    }
-                } else {
-                    panel.add(failedLabel);
+                clearErrorLabels(panel); // 清除之前的错误提示
+                
+                String userIdText = userText.getText().trim();
+                if (userIdText.isEmpty()) {
+                    panel.add(idFailLabel);
                     panel.validate();
                     panel.repaint();
+                    return;
                 }
 
+                char[] passwordChars = passwordText.getPassword();
+                String password = new String(passwordChars); // 获取密码
+                Arrays.fill(passwordChars, ' '); // 清除字符数组内容，增强安全性
+
+                if (password.isEmpty()) {
+                    panel.add(passwordFailLabel);
+                    panel.validate();
+                    panel.repaint();
+                    return;
+                }
+
+                try {
+                    int userId = Integer.parseInt(userIdText);
+                    User user = backend.UserDAO.loginUser(userId, password);
+
+                    if (user != null) {
+                        boolean right = user.isStudent();
+                        loginframe.dispose(); // 关闭登录窗口
+
+                        if (right) {
+                            new StudentFrame(user);
+                        } else {
+                            new LecturerFrame(user);
+                        }
+                    } else {
+                        panel.add(failedLabel);
+                        panel.validate();
+                        panel.repaint();
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "请输入有效的用户ID", "输入错误", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "登录过程中出现问题，请稍后重试。", "系统错误", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
             }
         });
-        //注册按钮
+
         JButton registerButton = new JButton("Register");
         registerButton.setBounds(240, 120, 100, 40);
         panel.add(registerButton);
+
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) (mainpanel.getLayout());
-                cl.show(mainpanel, "Register");
-                loginframe.setTitle("Register");
+                switchToPanel("Register", "Register");
             }
         });
     }
@@ -114,7 +140,7 @@ public class Loginframe {
         JLabel userLabel = new JLabel("Real Name:");
         userLabel.setBounds(10, 40, 80, 25);
         registerpanel.add(userLabel);
-        //输入Name的文本框
+
         JTextField userText = new JTextField(20);
         userText.setBounds(110, 40, 240, 25);
         registerpanel.add(userText);
@@ -122,61 +148,81 @@ public class Loginframe {
         JLabel passwordLabel = new JLabel("Set Password:");
         passwordLabel.setBounds(10, 90, 100, 25);
         registerpanel.add(passwordLabel);
-        //输入密码的文本框
+
         JPasswordField passwordText = new JPasswordField(20);
         passwordText.setBounds(110, 90, 240, 25);
         registerpanel.add(passwordText);
 
         JCheckBox checkBox = new JCheckBox("Is Student");
         checkBox.setBounds(30, 130, 120, 25);
-        checkBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-
-                } else {
-                }
-            }
-        });
         registerpanel.add(checkBox);
 
-        // 注册按钮
         JButton registerButton = new JButton("Register");
         registerButton.setBounds(50, 160, 140, 40);
         registerpanel.add(registerButton);
+
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User newUser = new User(userText.getText(), passwordText.getPassword().toString(), checkBox.isSelected());
-                //int id = backend.UserDAO.registerUser(newUser);
-                int id = 1;
-                Successframe(id);
+                String username = userText.getText().trim();
+                String password = new String(passwordText.getPassword());
 
+                if (username.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "请输入用户名", "输入错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "请输入密码", "输入错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                User newUser = new User(username, password, checkBox.isSelected());
+                int id = backend.UserDAO.registerUser(newUser);
+                
+                if (id != 0) {
+                    Successframe(id);
+                } else {
+                    JOptionPane.showMessageDialog(null, "注册失败", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         });
 
-        JButton CancelButton = new JButton("Back");
-        CancelButton.setBounds(210, 160, 140, 40);
-        CancelButton.addActionListener(new ActionListener() {
+        JButton cancelButton = new JButton("Back");
+        cancelButton.setBounds(210, 160, 140, 40);
+        registerpanel.add(cancelButton);
+
+        cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) (mainpanel.getLayout());
-                cl.show(mainpanel, "login");
-                loginframe.setTitle("Login");
+                switchToPanel("login", "Login");
             }
         });
-        registerpanel.add(CancelButton);
     }
 
     public void Successframe(int id) {
-        JFrame successframe = new JFrame("Successful Register");
+        JOptionPane.showMessageDialog(null, "您的用户ID是 " + id + ".", "注册成功", JOptionPane.INFORMATION_MESSAGE);
 
-        JOptionPane.showMessageDialog(null, "Your ID is " + id + ".", "Successful Register", JOptionPane.INFORMATION_MESSAGE);
+        switchToPanel("login", "Login");
 
+        JTextField loginIDField = (JTextField) Arrays.stream(loginpanel.getComponents())
+                .filter(c -> c instanceof JTextField).findFirst().orElse(null);
+        if (loginIDField != null) {
+            loginIDField.setText(String.valueOf(id)); // 预填注册的ID
+        }
     }
 
-    public static void main(String[] args) {
-        new Loginframe();
+    private void clearErrorLabels(JPanel panel) {
+        panel.remove(failedLabel);
+        panel.remove(passwordFailLabel);
+        panel.remove(idFailLabel);
     }
 
+    private void switchToPanel(String panelName, String title) {
+        CardLayout cl = (CardLayout) (mainpanel.getLayout());
+        cl.show(mainpanel, panelName);
+        loginframe.setTitle(title);
+    }
+    
 }
