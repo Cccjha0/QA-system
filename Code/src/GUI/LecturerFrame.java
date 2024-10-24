@@ -158,7 +158,7 @@ public class LecturerFrame {
         queryPanel.setLayout(null);
 
         JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 80, 25);
+        userLabel.setBounds(10, 10, 200, 25);
         queryPanel.add(userLabel);
 
         JLabel qLabel = new JLabel("Query your question:");
@@ -207,9 +207,8 @@ public class LecturerFrame {
     }
 
     public void genTextArea(JPanel panel, QA qa[]) {
-        
-         for(int i=0;i<qa.length;i++){
-                
+        int i = 0;
+        while (qa[i] != null){
                 JTextArea questionArea = new JTextArea(qa[i].getQuestion());
                 questionArea.setLineWrap(true);
                 questionArea.setWrapStyleWord(true);
@@ -226,12 +225,14 @@ public class LecturerFrame {
                 panel.add(answerArea);
 
                 answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
-                if (i<qa.length-1) {
-                 panel.add(Box.createVerticalStrut(25));
-             }
+                
+                panel.add(Box.createVerticalStrut(25));
+            
 
                 answerArea.revalidate();
                 answerArea.revalidate();
+                
+                i++;
             }
         
         panel.revalidate();

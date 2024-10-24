@@ -119,7 +119,9 @@ public class StudentFrame {
     }
 
     private void generateQAResults(JPanel panel, QA qa[]) {
-        for(int i=0;i<qa.length;i++){
+        int i = 0;
+        while (qa[i] != null) {
+            
                 
                 JTextArea questionArea = new JTextArea(qa[i].getQuestion());
                 questionArea.setLineWrap(true);
@@ -137,12 +139,14 @@ public class StudentFrame {
                 panel.add(answerArea);
 
                 answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
-                if (i<qa.length-1) {
+                
                  panel.add(Box.createVerticalStrut(25));
-             }
+             
 
                 answerArea.revalidate();
                 answerArea.revalidate();
+                
+                i++;
             }
         
         panel.revalidate();

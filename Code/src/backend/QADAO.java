@@ -51,10 +51,11 @@ public class QADAO {
             do { // 使用 do-while 处理至少有一条结果的情况
                 String question = rs.getString("question");
                 String answer = rs.getString("answer");
-                int createdBy = rs.getInt("createdBy");
+                int createdBy = rs.getInt("created_by");
                 int id = rs.getInt("id");
-                String createdAt = rs.getString("createdAt");
+                String createdAt = rs.getString("created_at");
                 
+                qa = new QA[100];
                 qa[cnt] = new QA(question, answer, createdBy);
                 qa[cnt].setId(id);
                 qa[cnt].setCreatedAt(createdAt);

@@ -12,7 +12,7 @@ public class QA {
     private int id;
     private final String question;
     private final String answer;
-    private final int createdBy;
+    private int createdBy;
     private String createdAt;
     
     public QA(String question, String answer, int createdBy) {
