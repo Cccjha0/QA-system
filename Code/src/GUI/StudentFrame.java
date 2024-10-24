@@ -100,9 +100,11 @@ public class StudentFrame {
         JPanel rollPanel = new JPanel();
         rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
         clearErrorLabels(queryPanel, noReseltLabel);
+        isScrollPanePresent(queryPanel,"scrollPane");
         if (!qa.equals(null) ) {
                 generateQAResults(rollPanel, qa);
                 JScrollPane scrollPane = new JScrollPane(rollPanel);
+                scrollPane.setName("scrollPane");
                 queryPanel.add(scrollPane);
                 scrollPane.setBounds(145, 215, 700, 400);
             }else{
@@ -118,7 +120,7 @@ public class StudentFrame {
         queryPanel.repaint();
     }
 
-    private void generateQAResults(JPanel panel, QA qa[]) {
+    private void generateQAResults(JPanel panel, QA qa[]) {  //学生端显示有问题 
         int i = 0;
         while (qa[i] != null) {
             
@@ -180,4 +182,15 @@ public class StudentFrame {
         panel.revalidate();
         panel.repaint();
     }
+    public boolean isScrollPanePresent(JPanel panel,String scrollPaneName) {
+    for (Component comp : panel.getComponents()) {
+        if (comp instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) comp;
+            if (scrollPaneName.equals(scrollPane.getName())) {
+             panel.remove(scrollPane); // 找到 JScrollPane
+            }
+        }
+    }
+    return false; // 没有找到 JScrollPane
+}
 }

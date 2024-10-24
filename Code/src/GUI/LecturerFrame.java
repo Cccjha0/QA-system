@@ -187,9 +187,12 @@ public class LecturerFrame {
 
             JPanel rollPanel = new JPanel();
             rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
+            isScrollPanePresent(queryPanel,"scrollPane");
+                
             if (!qa.equals(null) ) {
                 genTextArea(rollPanel, qa);
                 JScrollPane scrollPane = new JScrollPane(rollPanel);
+                scrollPane.setName("scrollPane");
                 queryPanel.add(scrollPane);
                 scrollPane.setBounds(145, 215, 700, 400);
             }else{
@@ -238,5 +241,15 @@ public class LecturerFrame {
         panel.revalidate();
         panel.repaint();
     }
-    
+    public boolean isScrollPanePresent(JPanel panel,String scrollPaneName) {
+    for (Component comp : panel.getComponents()) {
+        if (comp instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) comp;
+            if (scrollPaneName.equals(scrollPane.getName())) {
+             panel.remove(scrollPane); // 找到 JScrollPane
+            }
+        }
+    }
+    return false; // 没有找到 JScrollPane
+}
 }
