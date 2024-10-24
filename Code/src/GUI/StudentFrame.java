@@ -4,12 +4,10 @@
  */
 
 package GUI;
-import backend.*;
+import backend.QA;
 import backend.User;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -64,7 +62,7 @@ public class StudentFrame {
         queryPanel.setLayout(null);
 
         JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 80, 25);
+        userLabel.setBounds(10, 10, 200, 25);
         queryPanel.add(userLabel);
 
         JLabel qLabel = new JLabel("Query your question:");
@@ -89,14 +87,28 @@ public class StudentFrame {
         quitButton.setBounds(20, 590, 80, 35);
         queryPanel.add(quitButton);
         quitButton.addActionListener(e -> System.exit(0));
+        
+        
     }
 
     private void handleQuery(JTextArea qArea, JPanel queryPanel) {
-        ResultSet res = backend.QADAO.searchQA(qArea.getText());
+        QA qa[] = backend.QADAO.searchQA(qArea.getText());
 
+        JLabel noReseltLabel = new JLabel("No results found.");
+        noReseltLabel.setBounds(200, 165, 150, 35);
+        noReseltLabel.setFont(font);
         JPanel rollPanel = new JPanel();
         rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-        generateQAResults(rollPanel, res);
+        clearErrorLabels(queryPanel, noReseltLabel);
+        if (!qa.equals(null) ) {
+                generateQAResults(rollPanel, qa);
+                JScrollPane scrollPane = new JScrollPane(rollPanel);
+                queryPanel.add(scrollPane);
+                scrollPane.setBounds(145, 215, 700, 400);
+            }else{
+                showLabel(queryPanel, noReseltLabel);
+            }
+        
 
         JScrollPane scrollPane = new JScrollPane(rollPanel);
         scrollPane.setBounds(145, 215, 700, 400);
@@ -106,29 +118,33 @@ public class StudentFrame {
         queryPanel.repaint();
     }
 
-    private void generateQAResults(JPanel panel, ResultSet res) {
-        try {
-            while (res.next()) {
-                // 设置问题和答案
-                JTextArea aArea = createTextArea(res.getString(1));
-                panel.add(aArea);
+    private void generateQAResults(JPanel panel, QA qa[]) {
+        for(int i=0;i<qa.length;i++){
+                
+                JTextArea questionArea = new JTextArea(qa[i].getQuestion());
+                questionArea.setLineWrap(true);
+                questionArea.setWrapStyleWord(true);
+                questionArea.setEditable(false);  // 禁用编辑
+                panel.add(questionArea);
 
-                JTextArea qArea = createTextArea(res.getString(2));
+                questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
                 panel.add(Box.createVerticalStrut(7));
-                panel.add(qArea);
 
-                panel.add(Box.createVerticalStrut(25));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (res != null) res.close(); // 确保关闭 ResultSet
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+                JTextArea answerArea = new JTextArea(qa[i].getAnswer());
+                answerArea.setLineWrap(true);
+                answerArea.setWrapStyleWord(true);
+                answerArea.setEditable(false);  // 禁用编辑
+                panel.add(answerArea);
 
+                answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
+                if (i<qa.length-1) {
+                 panel.add(Box.createVerticalStrut(25));
+             }
+
+                answerArea.revalidate();
+                answerArea.revalidate();
+            }
+        
         panel.revalidate();
         panel.repaint();
     }
@@ -145,5 +161,19 @@ public class StudentFrame {
         textArea.setPreferredSize(new Dimension(650, height));
 
         return textArea;
+    }
+    
+    private void clearErrorLabels(JPanel panel, JLabel... labels) {
+        for (JLabel label : labels) {
+            panel.remove(label);
+        }
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    private void showLabel(JPanel panel, JLabel label) {
+        panel.add(label);
+        panel.revalidate();
+        panel.repaint();
     }
 }

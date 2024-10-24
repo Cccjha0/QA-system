@@ -74,7 +74,7 @@ public class LecturerFrame {
     private void InputPanelComponents(JPanel inputPanel) {
         inputPanel.setLayout(null);
         JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 80, 25);
+        userLabel.setBounds(10, 10, 200, 25);
         inputPanel.add(userLabel);
 
         JLabel qLabel = new JLabel("Input your question:");
@@ -173,19 +173,29 @@ public class LecturerFrame {
         queryPanel.add(qjScrollPane);
         qArea.setLineWrap(true);
         qArea.setWrapStyleWord(true);
+        
+        JLabel noReseltLabel = new JLabel("No results found.");
+        noReseltLabel.setBounds(200, 165, 150, 35);
+        noReseltLabel.setFont(font);
 
         JButton queryButton = new JButton("Query");
         queryButton.setBounds(145, 165, 80, 35);
         queryPanel.add(queryButton);
         queryButton.addActionListener(e -> {
-            ResultSet res = backend.QADAO.searchQA(qArea.getText());
+            QA qa[] = backend.QADAO.searchQA(qArea.getText());
+            clearErrorLabels(queryPanel, noReseltLabel);
 
             JPanel rollPanel = new JPanel();
             rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-            genTextArea(rollPanel, res);
-            JScrollPane scrollPane = new JScrollPane(rollPanel);
-            queryPanel.add(scrollPane);
-            scrollPane.setBounds(145, 215, 700, 400);
+            if (!qa.equals(null) ) {
+                genTextArea(rollPanel, qa);
+                JScrollPane scrollPane = new JScrollPane(rollPanel);
+                queryPanel.add(scrollPane);
+                scrollPane.setBounds(145, 215, 700, 400);
+            }else{
+                showLabel(queryPanel, noReseltLabel);
+            }
+                
             queryPanel.revalidate();
             queryPanel.repaint();
         });
@@ -196,39 +206,34 @@ public class LecturerFrame {
         quitButton.addActionListener(e -> System.exit(0));
     }
 
-    public void genTextArea(JPanel panel, ResultSet res) {
-        try {
-            while (res.next()) {
-                JTextArea aArea = new JTextArea(res.getString(1));
-                aArea.setLineWrap(true);
-                aArea.setWrapStyleWord(true);
-                aArea.setEditable(false);  // 禁用编辑
-                panel.add(aArea);
+    public void genTextArea(JPanel panel, QA qa[]) {
+        
+         for(int i=0;i<qa.length;i++){
+                
+                JTextArea questionArea = new JTextArea(qa[i].getQuestion());
+                questionArea.setLineWrap(true);
+                questionArea.setWrapStyleWord(true);
+                questionArea.setEditable(false);  // 禁用编辑
+                panel.add(questionArea);
 
-                aArea.setPreferredSize(new Dimension(650, aArea.getPreferredSize().height));
+                questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
                 panel.add(Box.createVerticalStrut(7));
 
-                JTextArea qArea = new JTextArea(res.getString(2));
-                qArea.setLineWrap(true);
-                qArea.setWrapStyleWord(true);
-                qArea.setEditable(false);  // 禁用编辑
-                panel.add(qArea);
+                JTextArea answerArea = new JTextArea(qa[i].getAnswer());
+                answerArea.setLineWrap(true);
+                answerArea.setWrapStyleWord(true);
+                answerArea.setEditable(false);  // 禁用编辑
+                panel.add(answerArea);
 
-                qArea.setPreferredSize(new Dimension(650, qArea.getPreferredSize().height));
-                panel.add(Box.createVerticalStrut(25));
+                answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
+                if (i<qa.length-1) {
+                 panel.add(Box.createVerticalStrut(25));
+             }
 
-                aArea.revalidate();
-                qArea.revalidate();
+                answerArea.revalidate();
+                answerArea.revalidate();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (res != null) res.close();  // 确保 ResultSet 关闭
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        
         panel.revalidate();
         panel.repaint();
     }
