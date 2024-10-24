@@ -27,15 +27,46 @@ public class QADAO {
         return true;
     }
 
-    public static ResultSet searchQA(String keyword) {
+    /**
+     *
+     *return null -> not found Q&A
+     *
+     **/
+    
+    public static QA[] searchQA(String keyword) {
+        QA qa[] = null;
+        int cnt = 0;
+
         ResultSet rs = null;
-        String query = "SELECT question, answer FROM QA WHERE question LIKE ?";
+        String query = "SELECT * FROM QA WHERE question LIKE ?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, "%" + keyword + "%");
             rs = statement.executeQuery();
+            
+            if (!rs.next()) {  // 直接使用 next() 检查
+                return qa;
+            }
+            
+            do { // 使用 do-while 处理至少有一条结果的情况
+                String question = rs.getString("question");
+                String answer = rs.getString("answer");
+                int createdBy = rs.getInt("createdBy");
+                int id = rs.getInt("id");
+                String createdAt = rs.getString("createdAt");
+                
+                qa[cnt] = new QA(question, answer, createdBy);
+                qa[cnt].setId(id);
+                qa[cnt].setCreatedAt(createdAt);
+                cnt++;
+                
+            } while (rs.next());
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return rs;
+
+        return qa; // 确保在调用处处理 ResultSet
     }
+
 }

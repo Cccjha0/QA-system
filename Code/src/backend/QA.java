@@ -10,9 +10,9 @@ package backend;
  */
 public class QA {
     private int id;
-    private String question;
-    private String answer;
-    private int createdBy;
+    private final String question;
+    private final String answer;
+    private final int createdBy;
     private String createdAt;
     
     public QA(String question, String answer, int createdBy) {
@@ -43,6 +43,10 @@ public class QA {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+    
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
     
     

@@ -16,10 +16,20 @@ public class UserDAO {
      * return UserID
      *
      */
-    public static int registerUser(User user) {
-        int userId = 0;
-        String query = "INSERT INTO User (password, name, isStudent) VALUES (?, ?, ?)";
-        try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
+public static int registerUser(User user) {
+    if (user == null) {
+        throw new IllegalArgumentException("User cannot be null");
+    }
+
+    int userId = 0;
+    String query = "INSERT INTO Users (password, name, isStudent) VALUES (?, ?, ?)";
+
+    try (Connection connection = DatabaseConnection.getConnection()) {
+        if (connection == null) {
+            throw new SQLException("Failed to establish a database connection.");
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getPassword());
             statement.setString(2, user.getName());
             statement.setBoolean(3, user.isStudent());
@@ -30,11 +40,14 @@ public class UserDAO {
                 userId = generatedKeys.getInt(1);
                 user.setId(userId);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return userId;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return userId;
+}
+
 
     /**
      *
@@ -44,7 +57,7 @@ public class UserDAO {
      */
     public static User loginUser(int id, String password) {
         User user = null;
-        String query = "SELECT name, isStudent FROM User WHERE id=? AND password=?";
+        String query = "SELECT name, isStudent FROM Users WHERE id=? AND password=?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.setString(2, password);
