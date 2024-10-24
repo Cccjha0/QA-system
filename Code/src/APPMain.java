@@ -12,7 +12,7 @@ import backend.*;
 import GUI.*;
 public class APPMain {
     public static void main(String[] args) {
-        User user = null;
+        new LoginFrame();
     }
     
 }
