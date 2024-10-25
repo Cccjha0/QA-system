@@ -78,10 +78,14 @@ public class StudentFrame {
         qArea.setLineWrap(true);
         qArea.setWrapStyleWord(true);
 
+        JLabel noReseltLabel = new JLabel("No results found.");
+        noReseltLabel.setBounds(250, 165, 200, 35);
+        noReseltLabel.setFont(font);
+        
         JButton queryButton = new JButton("Query");
         queryButton.setBounds(145, 165, 80, 35);
         queryPanel.add(queryButton);
-        queryButton.addActionListener(e -> handleQuery(qArea, queryPanel));
+        queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel));
 
         JButton quitButton = new JButton("Quit");
         quitButton.setBounds(20, 590, 80, 35);
@@ -91,30 +95,25 @@ public class StudentFrame {
         
     }
 
-    private void handleQuery(JTextArea qArea, JPanel queryPanel) {
+    private void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel) {
         QA qa[] = backend.QADAO.searchQA(qArea.getText());
 
-        JLabel noReseltLabel = new JLabel("No results found.");
-        noReseltLabel.setBounds(200, 165, 150, 35);
-        noReseltLabel.setFont(font);
         JPanel rollPanel = new JPanel();
         rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-        clearErrorLabels(queryPanel, noReseltLabel);
+      //  clearErrorLabels(queryPanel, noReseltLabel);
         isScrollPanePresent(queryPanel,"scrollPane");
-        if (!qa.equals(null) ) {
-                generateQAResults(rollPanel, qa);
-                JScrollPane scrollPane = new JScrollPane(rollPanel);
-                scrollPane.setName("scrollPane");
-                queryPanel.add(scrollPane);
-                scrollPane.setBounds(145, 215, 700, 400);
-            }else{
-                showLabel(queryPanel, noReseltLabel);
-            }
+        queryPanel.remove(noReseltLabel);
         
+        if (qa != null) {
+            JScrollPane scrollPane = new JScrollPane(rollPanel);
 
-        JScrollPane scrollPane = new JScrollPane(rollPanel);
-        scrollPane.setBounds(145, 215, 700, 400);
-        queryPanel.add(scrollPane);
+            generateQAResults(rollPanel, qa);
+            scrollPane.setName("scrollPane");
+            queryPanel.add(scrollPane);
+            scrollPane.setBounds(145, 215, 700, 400);
+            }else{
+                showLabel(queryPanel, noReseltLabel); 
+            }
 
         queryPanel.revalidate();
         queryPanel.repaint();
@@ -124,28 +123,24 @@ public class StudentFrame {
         int i = 0;
         while (qa[i] != null) {
             
-                
-                JTextArea questionArea = new JTextArea(qa[i].getQuestion());
-                questionArea.setLineWrap(true);
-                questionArea.setWrapStyleWord(true);
+                JTextArea questionArea = createTextArea(qa[i].getQuestion());
                 questionArea.setEditable(false);  // 禁用编辑
                 panel.add(questionArea);
 
-                questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
+               // questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
                 panel.add(Box.createVerticalStrut(7));
 
-                JTextArea answerArea = new JTextArea(qa[i].getAnswer());
-                answerArea.setLineWrap(true);
-                answerArea.setWrapStyleWord(true);
+                JTextArea answerArea = createTextArea(qa[i].getAnswer());
+                
                 answerArea.setEditable(false);  // 禁用编辑
                 panel.add(answerArea);
 
-                answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
+                //answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
                 
                  panel.add(Box.createVerticalStrut(25));
              
 
-                answerArea.revalidate();
+                questionArea.revalidate();
                 answerArea.revalidate();
                 
                 i++;
@@ -171,7 +166,9 @@ public class StudentFrame {
     
     private void clearErrorLabels(JPanel panel, JLabel... labels) {
         for (JLabel label : labels) {
+            if (panel.isAncestorOf(label)) {
             panel.remove(label);
+        }
         }
         panel.revalidate();
         panel.repaint();
@@ -179,6 +176,7 @@ public class StudentFrame {
 
     private void showLabel(JPanel panel, JLabel label) {
         panel.add(label);
+        label.setVisible(true);
         panel.revalidate();
         panel.repaint();
     }
@@ -193,4 +191,6 @@ public class StudentFrame {
     }
     return false; // 没有找到 JScrollPane
 }
+
+
 }

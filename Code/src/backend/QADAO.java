@@ -47,7 +47,7 @@ public class QADAO {
             if (!rs.next()) {  // 直接使用 next() 检查
                 return qa;
             }
-            
+            qa = new QA[100];
             do { // 使用 do-while 处理至少有一条结果的情况
                 String question = rs.getString("question");
                 String answer = rs.getString("answer");
@@ -55,7 +55,7 @@ public class QADAO {
                 int id = rs.getInt("id");
                 String createdAt = rs.getString("created_at");
                 
-                qa = new QA[100];
+                
                 qa[cnt] = new QA(question, answer, createdBy);
                 qa[cnt].setId(id);
                 qa[cnt].setCreatedAt(createdAt);
