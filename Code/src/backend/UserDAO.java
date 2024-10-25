@@ -73,4 +73,32 @@ public static int registerUser(User user) {
         }
         return user;
     }
+    
+    /**
+     * Updates the user's password.
+     *
+     * @param userId The ID of the user.
+     * @param newPassword The new password to set.
+     * @return true if the password was updated successfully, false otherwise.
+     */
+    public static boolean updatePassword(int userId, String newPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be null or empty");
+        }
+
+        String query = "UPDATE Users SET password = ? WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, newPassword);
+            statement.setInt(2, userId);
+            int rowsAffected = statement.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 }

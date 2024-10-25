@@ -41,11 +41,4 @@ public class DatabaseConnection {
         }
     }
     
-    public static void main(String[] args) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
