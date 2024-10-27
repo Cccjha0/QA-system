@@ -4,7 +4,7 @@
  */
 package backend;
 
-import java.security.interfaces.RSAKey;
+import backend.*;
 import java.sql.*;
 
 /**
@@ -33,16 +33,15 @@ public class QADAO {
      *
      **/
     
-    public static QA[] searchQA(String keyword) {
+    public static QA[] searchQA(int userId, String keyword) {
         QA qa[] = null;
         int cnt = 0;
 
-        ResultSet rs = null;
         String query = "SELECT * FROM QA WHERE question LIKE ?";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, "%" + keyword + "%");
-            rs = statement.executeQuery();
+            ResultSet rs = statement.executeQuery();
             
             if (!rs.next()) {  // 直接使用 next() 检查
                 return qa;
@@ -55,7 +54,6 @@ public class QADAO {
                 int id = rs.getInt("id");
                 String createdAt = rs.getString("created_at");
                 
-                
                 qa[cnt] = new QA(question, answer, createdBy);
                 qa[cnt].setId(id);
                 qa[cnt].setCreatedAt(createdAt);
@@ -66,8 +64,11 @@ public class QADAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        //将查询更新到RecentQueries表中
+        RecentQueriesDAO.saveOrUpdateQuery(userId, keyword);
 
-        return qa; // 确保在调用处处理 ResultSet
+        return qa; 
     }
 
 }
