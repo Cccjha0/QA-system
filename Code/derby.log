@@ -1,11 +1,18 @@
 ----------------------------------------------------------------
+<<<<<<< HEAD
 Sun Oct 27 14:27:00 CST 2024:
 正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@4e25154f 引导数据库
 目录 E:\learn\PDC\PDC Project\QA system\db\QAsystemDB 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585) 实例 a816c00e-0192-cca8-1476-00000f18c1b0
 已从 file:/E:/learn/PDC/PDC%20Project/QA%20system/Code/lib/derby.jar 加载
+=======
+Fri Oct 25 19:01:23 CST 2024:
+正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@69663380 引导数据库
+目录 E:\Git\QA-system\db\QAsystemDB 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585) 实例 a816c00e-0192-c356-9125-00000ed7a4a0
+已从 file:/E:/Git/QA-system/Code/lib/derby.jar 加载
+>>>>>>> functional-realization
 java.vendor=Oracle Corporation
-java.runtime.version=17.0.4+11-LTS-179
-user.dir=E:\learn\PDC\PDC Project\QA system\Code
+java.runtime.version=11.0.19+9-LTS-224
+user.dir=E:\Git\QA-system\Code
 os.name=Windows 11
 os.arch=amd64
 os.version=10.0
