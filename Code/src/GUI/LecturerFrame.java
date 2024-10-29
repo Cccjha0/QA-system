@@ -14,25 +14,20 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LecturerFrame {
-
-    private static final Font font = new Font("Arial", Font.PLAIN, 20);
-    private JFrame QAframe;
-    private User user;
-    
+public class LecturerFrame extends StudentFrame implements Editable{
+    private JFrame LectureFrame;
     public LecturerFrame(User user) {
-        this.user = user;
-        QAComponents();
+        super(user);
+        FrameComponents();
     }
-
-    private void QAComponents() {
+     void FrameComponents() {
         // 窗口设置
-        QAframe = new JFrame("QA_System");
-        QAframe.setSize(1000, 700);
-        QAframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        LectureFrame = new JFrame("Lecture QA_System");
+        LectureFrame.setSize(1000, 700);
+        LectureFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
-        QAframe.setLocation((screenSize.width - 1000) / 2, (screenSize.height - 700) / 2);
+        LectureFrame.setLocation((screenSize.width - 1000) / 2, (screenSize.height - 700) / 2);
 
         // 面板设置
         JPanel QAPanel = new JPanel(new CardLayout());
@@ -45,20 +40,19 @@ public class LecturerFrame {
         toolBar.setFloatable(false);
         JButton queryButton = new JButton("Query");
         JButton inputButton = new JButton("Input");
-
         Dimension buttonSize = new Dimension(100, 30);
         queryButton.setPreferredSize(buttonSize);
         inputButton.setPreferredSize(buttonSize);
-
+        toolBar.setMargin(new Insets(5, 20, 5, 20));
         toolBar.add(queryButton);
         toolBar.add(inputButton);
 
-        QAframe.add(toolBar, BorderLayout.NORTH);
-        QApanelComponents(queryPanel);
+        LectureFrame.add(toolBar, BorderLayout.NORTH);
+        queryPanelComponents(queryPanel);
         InputPanelComponents(inputPanel);
 
-        QAframe.add(QAPanel);
-        QAframe.setVisible(true);
+        LectureFrame.add(QAPanel);
+        LectureFrame.setVisible(true);
 
         // 使用抽取的方法进行切换
         queryButton.addActionListener(e -> switchPanel(QAPanel, "query"));
@@ -71,16 +65,17 @@ public class LecturerFrame {
         cl.show(panel, name);
     }
 
-    private void InputPanelComponents(JPanel inputPanel) {
+    public void InputPanelComponents(JPanel inputPanel) {
         inputPanel.setLayout(null);
-        JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 200, 25);
-        inputPanel.add(userLabel);
-
-        JLabel qLabel = new JLabel("Input your question:");
+        JLabel userLabel = addLabel(user.getName(),10,10,200,25,inputPanel);
+        JLabel qLabel = addLabel("Input your question:",150,20,200,25,inputPanel);
         qLabel.setFont(font);
-        qLabel.setBounds(150, 20, 200, 25);
-        inputPanel.add(qLabel);
+        JLabel aLabel = addLabel("Input your answer:",150,170,200,25,inputPanel);
+        aLabel.setFont(font);
+        JLabel pleaseInputQuestionLabel = new JLabel("Please input question");
+        JLabel pleaseInputAnswerLabel = new JLabel("Please input answer");
+        JLabel successfulInputLabel = new JLabel("Input Successful");
+        JLabel failLabel = new JLabel("Input Failed");
 
         JTextArea qArea = new JTextArea(5, 55);
         JScrollPane qjScrollPane = new JScrollPane(qArea);
@@ -90,11 +85,6 @@ public class LecturerFrame {
         qArea.setLineWrap(true);
         qArea.setWrapStyleWord(true);
 
-        JLabel aLabel = new JLabel("Input your answer:");
-        aLabel.setFont(font);
-        aLabel.setBounds(150, 170, 200, 25);
-        inputPanel.add(aLabel);
-
         JTextArea aArea = new JTextArea(20, 55);
         JScrollPane ajScrollPane = new JScrollPane(aArea);
         ajScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -103,31 +93,22 @@ public class LecturerFrame {
         aArea.setLineWrap(true);
         aArea.setWrapStyleWord(true);
 
-        JLabel inputqLabel = new JLabel("Please input question");
-        inputqLabel.setFont(font);
-        JLabel inputaLabel = new JLabel("Please input answer");
-        inputaLabel.setFont(font);
-        JLabel successfulLabel = new JLabel("Input Successful");
-        successfulLabel.setFont(font);
-        JLabel failLabel = new JLabel("Input Failed");
-        failLabel.setFont(font);
-
         JButton inputButton = new JButton("Input");
         inputButton.setBounds(770, 555, 80, 35);
         inputPanel.add(inputButton);
         inputButton.addActionListener(e -> {
             // 清除所有标签
-            clearErrorLabels(inputPanel, inputqLabel, inputaLabel, successfulLabel, failLabel);
+            clearErrorLabels(inputPanel, pleaseInputQuestionLabel, pleaseInputAnswerLabel, successfulInputLabel, failLabel);
             
             if (qArea.getText().trim().isEmpty()) {
-                showLabel(inputPanel, inputqLabel);
+                showLabel(inputPanel, pleaseInputQuestionLabel);
             } else if (aArea.getText().trim().isEmpty()) {
-                showLabel(inputPanel, inputaLabel);
+                showLabel(inputPanel, pleaseInputAnswerLabel);
             } else {
                 QA qa = new QA(qArea.getText(), aArea.getText(), user.getId());
                 boolean result = backend.QADAO.insertQA(qa);
                 if (result) {
-                    showLabel(inputPanel, successfulLabel);
+                    showLabel(inputPanel, successfulInputLabel);
                 } else {
                     showLabel(inputPanel, failLabel);
                 }
@@ -140,104 +121,10 @@ public class LecturerFrame {
         quitButton.addActionListener(e -> System.exit(0));
     }
 
-    private void clearErrorLabels(JPanel panel, JLabel... labels) {
-        for (JLabel label : labels) {
-            panel.remove(label);
-        }
-        panel.revalidate();
-        panel.repaint();
-    }
-
     private void showLabel(JPanel panel, JLabel label) {
+        label.setBounds(400,170,300,30);
+        label.setFont(font);
         panel.add(label);
-        panel.revalidate();
-        panel.repaint();
-    }
-
-    private void QApanelComponents(JPanel queryPanel) {
-        queryPanel.setLayout(null);
-
-        JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 200, 25);
-        queryPanel.add(userLabel);
-
-        JLabel qLabel = new JLabel("Query your question:");
-        qLabel.setFont(font);
-        qLabel.setBounds(150, 20, 200, 25);
-        queryPanel.add(qLabel);
-
-        JTextArea qArea = new JTextArea(5, 55);
-        JScrollPane qjScrollPane = new JScrollPane(qArea);
-        qjScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        qjScrollPane.setBounds(150, 55, 700, 100);
-        queryPanel.add(qjScrollPane);
-        qArea.setLineWrap(true);
-        qArea.setWrapStyleWord(true);
-        
-        JLabel noReseltLabel = new JLabel("No results found.");
-        noReseltLabel.setBounds(200, 165, 150, 35);
-        noReseltLabel.setFont(font);
-
-        JButton queryButton = new JButton("Query");
-        queryButton.setBounds(145, 165, 80, 35);
-        queryPanel.add(queryButton);
-        queryButton.addActionListener(e -> {
-            QA qa[] = backend.QADAO.searchQA(qArea.getText());
-            clearErrorLabels(queryPanel, noReseltLabel);
-
-            JPanel rollPanel = new JPanel();
-            rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-            isScrollPanePresent(queryPanel,"scrollPane");
-                
-            if (!qa.equals(null) ) {
-                genTextArea(rollPanel, qa);
-                JScrollPane scrollPane = new JScrollPane(rollPanel);
-                scrollPane.setName("scrollPane");
-                queryPanel.add(scrollPane);
-                scrollPane.setBounds(145, 215, 700, 400);
-            }else{
-                showLabel(queryPanel, noReseltLabel);
-            }
-                
-            queryPanel.revalidate();
-            queryPanel.repaint();
-        });
-
-        JButton quitButton = new JButton("Quit");
-        quitButton.setBounds(20, 590, 80, 35);
-        queryPanel.add(quitButton);
-        quitButton.addActionListener(e -> System.exit(0));
-    }
-
-    public void genTextArea(JPanel panel, QA qa[]) {
-        int i = 0;
-        while (qa[i] != null){
-                JTextArea questionArea = new JTextArea(qa[i].getQuestion());
-                questionArea.setLineWrap(true);
-                questionArea.setWrapStyleWord(true);
-                questionArea.setEditable(false);  // 禁用编辑
-                panel.add(questionArea);
-
-                questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
-                panel.add(Box.createVerticalStrut(7));
-
-                JTextArea answerArea = new JTextArea(qa[i].getAnswer());
-                answerArea.setLineWrap(true);
-                answerArea.setWrapStyleWord(true);
-                answerArea.setEditable(false);  // 禁用编辑
-                panel.add(answerArea);
-
-                answerArea.setPreferredSize(new Dimension(650, answerArea.getPreferredSize().height));
-                
-                panel.add(Box.createVerticalStrut(25));
-            
-
-                answerArea.revalidate();
-                answerArea.revalidate();
-                
-                i++;
-            }
-        
         panel.revalidate();
         panel.repaint();
     }
@@ -252,4 +139,8 @@ public class LecturerFrame {
     }
     return false; // 没有找到 JScrollPane
 }
+
+//    public static void main(String[] args) {
+//        new LecturerFrame(new User("Ponder","123",false));
+//    }
 }

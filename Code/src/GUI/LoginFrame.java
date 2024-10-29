@@ -12,10 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class LoginFrame {
-
-    JFrame loginframe = new JFrame("Login");
-
+public class LoginFrame extends QAFrame implements Loginable {
+    JFrame loginframe = new JFrame(Frametitle);
     Toolkit kit = Toolkit.getDefaultToolkit();
     Dimension screenSize = kit.getScreenSize();
     int screenWidth = screenSize.width; //屏幕宽度
@@ -24,12 +22,12 @@ public class LoginFrame {
     JPanel mainpanel = new JPanel(new CardLayout());
     JPanel loginpanel = new JPanel();
     JPanel registerpanel = new JPanel();
-    
-    JLabel failedLabel = new JLabel("Failed login, ID or password is incorrect.");
-    JLabel passwordFailLabel = new JLabel("Failed login, password is necessary.");
-    JLabel idFailLabel = new JLabel("Failed login, ID is necessary.");
 
     public LoginFrame() {
+        super("Login Frame");
+    }
+    @Override
+    void FrameComponents() {
         loginframe.setSize(400, 250);
         loginframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -38,78 +36,64 @@ public class LoginFrame {
         mainpanel.add(loginpanel, "login");
         mainpanel.add(registerpanel, "Register");
         registerpanelComponents(registerpanel);
-        loginComponents(loginpanel);
+        LoginPanelComponents(loginpanel);
 
         loginframe.add(mainpanel);
         loginframe.setVisible(true);
     }
-
-    private void loginComponents(JPanel panel) {
+    @Override
+    public void LoginPanelComponents(JPanel panel) {
         panel.setLayout(null);
 
-        JLabel userLabel = new JLabel("ID:");
-        userLabel.setBounds(10, 40, 80, 25);
-        panel.add(userLabel);
-
-        JTextField userText = new JTextField(20);
-        userText.setBounds(100, 40, 240, 25);
-        panel.add(userText);
-
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(10, 80, 80, 25);
-        panel.add(passwordLabel);
-
-        JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(100, 80, 240, 25);
-        panel.add(passwordText);
-
-        failedLabel.setBounds(95, 170, 300, 25);
-        passwordFailLabel.setBounds(95, 170, 300, 25);
-        idFailLabel.setBounds(95, 170, 300, 25);
-
-        JButton loginButton = new JButton("Login");
-        loginButton.setBounds(100, 120, 100, 40);
-        panel.add(loginButton);
+        JLabel userLabel = addLabel("ID:",10,40,80,25,panel);
+        JTextField userText = addTextField(20,100,40,240,25,panel);
+        JLabel passwordLabel = addLabel("Password:",10,80,80,25,panel);
+        JPasswordField passwordText = addPasswordField(20,100,80,240,25,panel);
+        JLabel nullfailedLabel = addLabel("Failed login, ID or password is incorrect.",95,170,300,25,panel);
+        nullfailedLabel.setVisible(false);
+        JLabel passwordFailLabel = addLabel("Failed login, password is necessary.",95,170,300,25,panel);
+        passwordFailLabel.setVisible(false);
+        JLabel idFailLabel = addLabel("Failed login, ID is necessary.",95,170,300,25,panel);
+        idFailLabel.setVisible(false);
+        JButton loginButton = addButton("Login",100,120,100,40,panel);
+        JButton registerButton = addButton("Register",240,120,100,40,panel);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clearErrorLabels(panel); // 清除之前的错误提示
-                
+                clearErrorLabels(panel,nullfailedLabel,passwordLabel,idFailLabel); // 清除之前的错误提示
                 String userIdText = userText.getText().trim();
                 if (userIdText.isEmpty()) {
                     panel.add(idFailLabel);
+                    idFailLabel.setVisible(true);
                     panel.validate();
                     panel.repaint();
                     return;
                 }
-
                 char[] passwordChars = passwordText.getPassword();
                 String password = new String(passwordChars); // 获取密码
                 Arrays.fill(passwordChars, ' '); // 清除字符数组内容，增强安全性
-
                 if (password.isEmpty()) {
                     panel.add(passwordFailLabel);
+                    passwordLabel.setVisible(true);
                     panel.validate();
                     panel.repaint();
                     return;
                 }
-
                 try {
                     int userId = Integer.parseInt(userIdText);
                     User user = backend.UserDAO.loginUser(userId, password);
-
                     if (user != null) {
                         boolean right = user.isStudent();
                         loginframe.dispose(); // 关闭登录窗口
-
                         if (right) {
                             new StudentFrame(user);
                         } else {
                             new LecturerFrame(user);
                         }
                     } else {
-                        panel.add(failedLabel);
+                        panel.add(nullfailedLabel);
+                        nullfailedLabel.setVisible(true);
                         panel.validate();
                         panel.repaint();
                     }
@@ -121,11 +105,6 @@ public class LoginFrame {
                 }
             }
         });
-
-        JButton registerButton = new JButton("Register");
-        registerButton.setBounds(240, 120, 100, 40);
-        panel.add(registerButton);
-
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,29 +116,15 @@ public class LoginFrame {
     public void registerpanelComponents(JPanel registerpanel) {
         registerpanel.setLayout(null);
 
-        JLabel userLabel = new JLabel("Real Name:");
-        userLabel.setBounds(10, 40, 80, 25);
-        registerpanel.add(userLabel);
-
-        JTextField userText = new JTextField(20);
-        userText.setBounds(110, 40, 240, 25);
-        registerpanel.add(userText);
-
-        JLabel passwordLabel = new JLabel("Set Password:");
-        passwordLabel.setBounds(10, 90, 100, 25);
-        registerpanel.add(passwordLabel);
-
-        JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(110, 90, 240, 25);
-        registerpanel.add(passwordText);
-
+        JLabel userLabel = addLabel("Real Name",10,40,80,25,registerpanel);
+        JTextField userText = addTextField(20,110,40,240,25,registerpanel);
+        JLabel passwordLabel = addLabel("Set Password:",10,90,100,25,registerpanel);
+        JPasswordField passwordText = addPasswordField(20,110,90,240,25,registerpanel);
+        JButton registerButton = addButton("Register",50,160,140,40,registerpanel);
+        JButton cancelButton = addButton("Back",210,160,140,40,registerpanel);
         JCheckBox checkBox = new JCheckBox("Is Student");
         checkBox.setBounds(30, 130, 120, 25);
         registerpanel.add(checkBox);
-
-        JButton registerButton = new JButton("Register");
-        registerButton.setBounds(50, 160, 140, 40);
-        registerpanel.add(registerButton);
 
         registerButton.addActionListener(new ActionListener() {
             @Override
@@ -181,17 +146,13 @@ public class LoginFrame {
                 int id = backend.UserDAO.registerUser(newUser);
                 
                 if (id != 0) {
-                    Successframe(id);
+                    registerSuccessFrame(id);
                 } else {
                     JOptionPane.showMessageDialog(null, "注册失败", "错误", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
         });
-
-        JButton cancelButton = new JButton("Back");
-        cancelButton.setBounds(210, 160, 140, 40);
-        registerpanel.add(cancelButton);
 
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -201,7 +162,7 @@ public class LoginFrame {
         });
     }
 
-    public void Successframe(int id) {
+    public void registerSuccessFrame(int id) {
         JOptionPane.showMessageDialog(null, "您的用户ID是 " + id + ".", "注册成功", JOptionPane.INFORMATION_MESSAGE);
 
         switchToPanel("login", "Login");
@@ -213,16 +174,12 @@ public class LoginFrame {
         }
     }
 
-    private void clearErrorLabels(JPanel panel) {
-        panel.remove(failedLabel);
-        panel.remove(passwordFailLabel);
-        panel.remove(idFailLabel);
-    }
-
     private void switchToPanel(String panelName, String title) {
         CardLayout cl = (CardLayout) (mainpanel.getLayout());
         cl.show(mainpanel, panelName);
         loginframe.setTitle(title);
     }
-    
+
+
+
 }
