@@ -25,6 +25,7 @@ public class LoginFrame extends QAFrame implements Loginable {
 
     public LoginFrame() {
         super("Login Frame");
+        FrameComponents();
     }
     @Override
     void FrameComponents() {
