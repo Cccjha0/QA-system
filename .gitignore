@@ -4,8 +4,11 @@
 
 Git版本控制.md
 .DS_Store
-./Code/derby.log
-./db/QAsystemDB/db.lck
-./db/QAsystemDB/log/log.ctrl
-./db/QAsystemDB/log/log1.dat
-./db/QAsystemDB/log/logmirror.ctrl
+/Code/derby.log
+/db/QAsystemDB/db.lck
+/db/QAsystemDB/log/log.ctrl
+/db/QAsystemDB/log/log1.dat
+/db/QAsystemDB/log/logmirror.ctrl
+*.log
+*.lck
+/db/QAsystemDB/log/
