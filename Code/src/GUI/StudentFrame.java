@@ -11,20 +11,19 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StudentFrame {
-
-    private static final Font font = new Font("Arial", Font.PLAIN, 20);
+public class StudentFrame extends QAFrame implements Searchable{
     private JFrame studentFrame;
-    private User user;
+     User user;
 
     public StudentFrame(User user) {
         this.user = user;
-        studentComponents();
+        Frametitle="Students QA_System";
+        FrameComponents();
     }
-
-    private void studentComponents() {
+    @Override
+    void FrameComponents() {
         // 窗口设置
-        studentFrame = new JFrame("QA_System");
+        studentFrame = new JFrame(Frametitle);
         studentFrame.setSize(1000, 700);
         studentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -39,14 +38,16 @@ public class StudentFrame {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         JButton queryButton = new JButton("Query");
+        JButton CenterButton = new JButton("Personal Center");
 
         Dimension buttonSize = new Dimension(100, 30);
         queryButton.setPreferredSize(buttonSize);
 
         toolBar.add(queryButton);
+        toolBar.add(CenterButton);
 
         studentFrame.add(toolBar, BorderLayout.NORTH);
-        studentPanelComponents(queryPanel);
+        queryPanelComponents(queryPanel);
 
         studentFrame.add(studentPanel);
         studentFrame.setVisible(true);
@@ -56,19 +57,20 @@ public class StudentFrame {
             CardLayout cl = (CardLayout) (studentPanel.getLayout());
             cl.show(studentPanel, "query");
         });
+        CenterButton.addActionListener(e -> {
+            new CenterFrame(user,(screenSize.width - 1000) / 2,(screenSize.height - 700) / 2);
+        });
     }
 
-    private void studentPanelComponents(JPanel queryPanel) {
+    public void queryPanelComponents(JPanel queryPanel) {
         queryPanel.setLayout(null);
 
-        JLabel userLabel = new JLabel(user.getName());
-        userLabel.setBounds(10, 10, 200, 25);
-        queryPanel.add(userLabel);
-
-        JLabel qLabel = new JLabel("Query your question:");
+        JLabel userLabel = addLabel(user.getName(),10,10,200,25,queryPanel);
+        JLabel qLabel = addLabel("Query your question:",150,20,200,25,queryPanel);
         qLabel.setFont(font);
-        qLabel.setBounds(150, 20, 200, 25);
-        queryPanel.add(qLabel);
+        JLabel noReseltLabel = addLabel("No results found.",250,165,200,35,queryPanel);
+        noReseltLabel.setFont(font);
+        noReseltLabel.setVisible(false);
 
         JTextArea qArea = new JTextArea(5, 55);
         JScrollPane qjScrollPane = new JScrollPane(qArea);
@@ -78,25 +80,15 @@ public class StudentFrame {
         qArea.setLineWrap(true);
         qArea.setWrapStyleWord(true);
 
-        JLabel noReseltLabel = new JLabel("No results found.");
-        noReseltLabel.setBounds(250, 165, 200, 35);
-        noReseltLabel.setFont(font);
-        
-        JButton queryButton = new JButton("Query");
-        queryButton.setBounds(145, 165, 80, 35);
-        queryPanel.add(queryButton);
-        queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel));
-
-        JButton quitButton = new JButton("Quit");
-        quitButton.setBounds(20, 590, 80, 35);
-        queryPanel.add(quitButton);
+        JButton queryButton = addButton("Query",145,165,80,35,queryPanel);
+        queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel,user));
+        JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
         quitButton.addActionListener(e -> System.exit(0));
         
         
     }
-
-    private void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel) {
-        QA qa[] = backend.QADAO.searchQA(qArea.getText());
+    private void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel,User user) {
+        QA qa[] = backend.QADAO.searchQA(user.getId(),qArea.getText());
 
         JPanel rollPanel = new JPanel();
         rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
@@ -163,16 +155,7 @@ public class StudentFrame {
 
         return textArea;
     }
-    
-    private void clearErrorLabels(JPanel panel, JLabel... labels) {
-        for (JLabel label : labels) {
-            if (panel.isAncestorOf(label)) {
-            panel.remove(label);
-        }
-        }
-        panel.revalidate();
-        panel.repaint();
-    }
+
 
     private void showLabel(JPanel panel, JLabel label) {
         panel.add(label);
@@ -192,5 +175,7 @@ public class StudentFrame {
     return false; // 没有找到 JScrollPane
 }
 
-
+    public static void main(String[] args) {
+        new StudentFrame(new User("Ponder","123",true));
+    }
 }
