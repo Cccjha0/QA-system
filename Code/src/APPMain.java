@@ -8,10 +8,11 @@
  * @author peter
  */
 
-import backend.*;
 import GUI.*;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 public class APPMain {
     public static void main(String[] args) {
+        FlatMacLightLaf.setup();
         new LoginFrame();
     }
     
