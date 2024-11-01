@@ -3,5 +3,5 @@ package GUI;
 import javax.swing.*;
 
 public interface Editable {
-    void inputable();
+    void InputPanelComponents(JPanel inputPanel); 
 }

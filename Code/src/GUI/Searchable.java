@@ -1,7 +1,9 @@
 package GUI;
 
+import javax.swing.*;
 import backend.QA;
 
 public interface Searchable {
-        QA[] queryable(int id, String keyword);
+        QA[] searchable(int userid, String keyword);
+            
 }
