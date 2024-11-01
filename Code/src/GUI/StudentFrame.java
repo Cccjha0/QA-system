@@ -16,6 +16,7 @@ public class StudentFrame extends QAFrame implements Searchable{
     JPanel recentPanel = new JPanel();
     JLabel noReseltLabel = new JLabel();
     JTextArea qArea = new JTextArea();
+    JLabel RecentQueriesLabel = new JLabel("Recent Queries");
     public StudentFrame(User user) {
         this.user = user;
         Frametitle="Students QA_System";
@@ -52,7 +53,7 @@ public class StudentFrame extends QAFrame implements Searchable{
 
         studentFrame.add(toolBar, BorderLayout.NORTH);
         queryPanelComponents(queryPanel);
-        recentPanelInitital();
+        
 
         studentFrame.add(mainPanel);
         studentFrame.setVisible(true);
@@ -65,13 +66,14 @@ public class StudentFrame extends QAFrame implements Searchable{
         recentButton.addActionListener(e -> {
             CardLayout cl = (CardLayout) (mainPanel.getLayout());
             cl.show(mainPanel, "recent");
+            recentPanelInitital();
 
         });
     }
 
     public void queryPanelComponents(JPanel queryPanel) {
         queryPanel.setLayout(null);
-
+        
         JLabel userLabel = addLabel(user.getName(),10,10,200,25,queryPanel);
         JLabel qLabel = addLabel("Query your question:",150,20,200,25,queryPanel);
         qLabel.setFont(font);
@@ -91,8 +93,9 @@ public class StudentFrame extends QAFrame implements Searchable{
         queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel,user));
         JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-             new LoginFrame();
-            dispose();
+             dispose();
+            new LoginFrame();
+            
         });
 
 
@@ -122,17 +125,31 @@ public class StudentFrame extends QAFrame implements Searchable{
         queryPanel.revalidate();
         queryPanel.repaint();
     }
-    public void recentPanelInitital(){
-        JLabel RecentQueriesLabel = addLabel("Recent Queries",100,50,250,25,recentPanel);
-        RecentQueriesLabel.setFont(font);
+
+    public void recentPanelInitital() {
+        recentPanel.setLayout(null);
+        RecentQueriesLabel.setBounds(375, 50, 250, 25);
         recentPanel.add(RecentQueriesLabel);
-        List<String> qusetion = RecentQueriesDAO.getRecentQueries(user.getId());
-        JComboBox questionComboBox = new JComboBox<>((ComboBoxModel) qusetion);
+       
+        
+        JButton querybutton = addButton("Query", 700, 150, 80, 25, recentPanel);
+        recentPanel.add(RecentQueriesLabel);
+        RecentQueriesLabel.setFont(font);
+        
+        List<String> listQuestion = RecentQueriesDAO.getRecentQueries(user.getId());
+        String[] question= listQuestion.toArray(new String[0]); 
+        
+        JComboBox questionComboBox = new JComboBox<>(question);
         recentPanel.add(questionComboBox);
-        questionComboBox.setBounds(20,100,300,300);
+        recentPanel.repaint();
+        
+        questionComboBox.setPreferredSize(new Dimension(questionComboBox.getPreferredSize().width, 20)); 
+
+        
+        questionComboBox.setBounds(300,150,300,20);
         String selectedOption = (String) questionComboBox.getSelectedItem();
 
-        JButton querybutton = addButton("Query",350,100,80,25,recentPanel);
+        
         querybutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,14 +171,14 @@ public class StudentFrame extends QAFrame implements Searchable{
         int i = 0;
         while (qa[i] != null) {
 
-            JTextArea questionArea = createTextArea(qa[i].getQuestion());
+            JTextArea questionArea = createTextArea("Question" + (i+1) + ": " + qa[i].getQuestion());
             questionArea.setEditable(false);  // 禁用编辑
             panel.add(questionArea);
 
             // questionArea.setPreferredSize(new Dimension(650, questionArea.getPreferredSize().height));
             panel.add(Box.createVerticalStrut(7));
 
-            JTextArea answerArea = createTextArea(qa[i].getAnswer());
+            JTextArea answerArea = createTextArea("Answer" + (i+1) + ": " + qa[i].getAnswer());
 
             answerArea.setEditable(false);  // 禁用编辑
             panel.add(answerArea);
