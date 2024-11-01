@@ -16,10 +16,10 @@ public class RecentQueriesDAO {
 
     // 添加查询记录，并控制记录数量上限
     public static void saveOrUpdateQuery(int userId, String queryText) {
-        String updateQuery = "UPDATE RecentQueries SET query_time = CURRENT_TIMESTAMP WHERE user_id = ? AND query_text = ?";
-        String insertQuery = "INSERT INTO RecentQueries (user_id, query_text) VALUES (?, ?)";
-        String countQuery = "SELECT COUNT(*) FROM RecentQueries WHERE user_id = ?";
-        String deleteOldestQuery = "DELETE FROM RecentQueries WHERE query_id = (SELECT query_id FROM RecentQueries WHERE user_id = ? ORDER BY query_time ASC FETCH FIRST ROW ONLY)";
+        String updateQuery = "UPDATE RecentQuery SET query_time = CURRENT_TIMESTAMP WHERE user_id = ? AND query_text = ?";
+        String insertQuery = "INSERT INTO RecentQuery (user_id, query_text) VALUES (?, ?)";
+        String countQuery = "SELECT COUNT(*) FROM RecentQuery WHERE user_id = ?";
+        String deleteOldestQuery = "DELETE FROM RecentQuery WHERE query_id = (SELECT query_id FROM RecentQuery WHERE user_id = ? ORDER BY query_time ASC FETCH FIRST ROW ONLY)";
 
         try ( Connection conn = DatabaseConnection.getConnection()) {
 
@@ -61,7 +61,7 @@ public class RecentQueriesDAO {
     // 获取用户的最近10条查询记录
     public static List<String> getRecentQueries(int userId) {
         List<String> recentQueries = new ArrayList<>();
-        String query = "SELECT query_text FROM RecentQueries WHERE user_id = ? ORDER BY query_time DESC FETCH FIRST 10 ROWS ONLY";
+        String query = "SELECT query_text FROM RecentQuery WHERE user_id = ? ORDER BY query_time DESC FETCH FIRST 10 ROWS ONLY";
 
         try ( Connection conn = DatabaseConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
 
