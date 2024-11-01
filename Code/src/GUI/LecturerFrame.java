@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class LecturerFrame extends StudentFrame implements Editable{
     public LecturerFrame(User user) {
@@ -26,6 +27,7 @@ public class LecturerFrame extends StudentFrame implements Editable{
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
         setLocation((screenSize.width - 1000) / 2, (screenSize.height - 700) / 2);
+        setTitle(Frametitle);
 
         // 面板设置
         JPanel mainPanel = new JPanel(new CardLayout());
@@ -52,7 +54,7 @@ public class LecturerFrame extends StudentFrame implements Editable{
         add(toolBar, BorderLayout.NORTH);
         queryPanelComponents(queryPanel);
         InputPanelComponents(inputPanel);
-        recentPanelInitital();
+        lectureRecentPanelInitital();
 
         add(mainPanel);
         setVisible(true);
@@ -69,7 +71,6 @@ public class LecturerFrame extends StudentFrame implements Editable{
     }
 
     public void InputPanelComponents(JPanel inputPanel) {
-        setTitle(Frametitle);
         inputPanel.setLayout(null);
         JLabel userLabel = addLabel(user.getName(),10,10,200,25,inputPanel);
         JLabel qLabel = addLabel("Input your question:",150,20,200,25,inputPanel);
@@ -124,7 +125,52 @@ public class LecturerFrame extends StudentFrame implements Editable{
         inputPanel.add(quitButton);
         quitButton.addActionListener(e -> System.exit(0));
     }
+    public void lectureRecentPanelInitital() {
+        recentPanel.setLayout(null);
+        JLabel userLabel = addLabel(user.getName(),10,10,200,25,recentPanel);
+        RecentQueriesLabel.setBounds(0, 50, 1000, 60);
+        RecentQueriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        RecentQueriesLabel.setFont(font1);
+        recentPanel.add(RecentQueriesLabel);
 
+
+        JButton querybutton = addButton("Query", 700, 150, 80, 30, recentPanel);
+        recentPanel.add(RecentQueriesLabel);
+        RecentQueriesLabel.setFont(font);
+
+        List<String> listQuestion = RecentQueriesDAO.getRecentQueries(user.getId());
+        String[] question= listQuestion.toArray(new String[0]);
+
+        JComboBox questionComboBox = new JComboBox<>(question);
+        recentPanel.add(questionComboBox);
+        recentPanel.repaint();
+
+        //questionComboBox.setPreferredSize(new Dimension(questionComboBox.getPreferredSize().width, 20));
+
+
+        questionComboBox.setBounds(320,150,360,30);
+        String selectedOption = (String) questionComboBox.getSelectedItem();
+
+
+        querybutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchPanel(mainPanel,"query");
+                searchable(user.getId(),selectedOption);
+                qArea.setText(selectedOption);
+                handleQuery(qArea,queryPanel,noReseltLabel,user);
+            }
+        });
+        recentPanel.add(querybutton);
+        //recentPanel.add(userCenterButton);
+        JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
+        quitButton.addActionListener(e -> {
+            dispose();
+            new LoginFrame();
+
+        });
+        recentPanel.add(quitButton);
+    }
     private void showLabel(JPanel panel, JLabel label) {
         label.setBounds(400,170,300,30);
         label.setFont(font);
