@@ -4,43 +4,48 @@ import backend.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class CenterFrame extends JFrame{
     private User user;
-    JFrame CenterFrame;
-    int fatherx;
-    int fathery;
-    public CenterFrame(User user,int fatherx,int fathery){
+    private JLabel userlabel =new JLabel();
+    private JButton resetButton = new JButton("Reset Password");
+    public CenterFrame(User user){
         this.user=user;
-        this.fatherx=fatherx;
-        this.fathery=fathery;
-        //FrameComponents();
+        FrameComponents();
     }
     void FrameComponents() {
-        CenterFrame = new JFrame();
-        CenterFrame.setSize(350, 400);
-        CenterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 200);
+        setTitle("Personal Center");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
-        CenterFrame.setLocation(fatherx-350,fathery);
-        PersonalCenterPanelComponents(CenterFrame,user);
-        CenterFrame.setVisible(true);
-    }
-    private void PersonalCenterPanelComponents(JFrame jFrame,User user){
+        setLocation((screenSize.width - 300) / 2, (screenSize.height - 200) / 2);
+
         JPanel CenterPanel = new JPanel();
         CenterPanel.setLayout(null);
-        jFrame.add(CenterPanel);
-//        JLabel nameLable = addLabel(user.getName(),75,40,200,60,CenterPanel);
-//        nameLable.setFont(font);
-//        JLabel idLanle = addLabel("ID"+user.getId()+"感觉有点空啊，功能太少了，不如砍了",30,120,200,30,CenterPanel);
-//        JButton resetButton = addButton("Reset Password",80,200,190,30,CenterPanel);
-//        JButton backButtom = addButton("Back",80,240,100,30,CenterPanel);
+        add(CenterPanel);
+        userlabel.setText(user.getName());
+        userlabel.setBounds(0, 40, 300, 40);
+        userlabel.setHorizontalAlignment(SwingConstants.CENTER);
+        setVisible(true);
+        resetButton.setBounds(50, 100, 200, 30);
+        resetButton.addActionListener(e -> {
+            dispose();
+            new ResetPasswordFrame(user);
+        });
+        CenterPanel.add(resetButton);
+        CenterPanel.add(userlabel);
 
-//        resetButton.addActionListener(e -> {
-//            new  ResetPasswordFrame(user);
-//        });
-//        backButtom.addActionListener(e -> {
-//            jFrame.dispose();
-//        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                    dispose();
+            }
+        });
+
     }
+
 }

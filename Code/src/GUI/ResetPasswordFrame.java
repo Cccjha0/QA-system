@@ -6,13 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 import backend.UserDAO;
 
 
 public class ResetPasswordFrame extends QAFrame {
-JFrame resetFrame;
     public ResetPasswordFrame(User user) {
         this.user = user;
         Frametitle="Reset Password";
@@ -21,14 +22,22 @@ JFrame resetFrame;
 
     @Override
     void FrameComponents() {
-        resetFrame = new JFrame(Frametitle);
-        resetFrame.setSize(350, 200);
-        resetFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle(Frametitle);
+        setSize(350, 200);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
-        resetFrame.setLocation(400,250);
-        ResetComponents(resetFrame,user);
-        resetFrame.setVisible(true);
+        setLocation((screenSize.width - 350) / 2, (screenSize.height - 200) / 2);
+
+        ResetComponents(this,user);
+
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
     }
     public void ResetComponents(JFrame jFrame,User user){
         JPanel resetPanel = new JPanel();
@@ -52,15 +61,7 @@ JFrame resetFrame;
                 successLabel.setVisible(true);
                 resetPanel.validate();
                 resetPanel.repaint();
-                int delay = 2000;
-                Timer timer = new Timer(delay, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        resetFrame.dispose(); // 关闭窗口
-                    }
-                });
-                timer.setRepeats(false); // 设置定时器只触发一次
-                timer.start();
+
             }else {
                 resetPanel.add(failedLabel);
                 failedLabel.setVisible(true);

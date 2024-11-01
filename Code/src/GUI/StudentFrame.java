@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class StudentFrame extends QAFrame implements Searchable{
+    static final Font font1 = new Font("Serif", Font.PLAIN, 40);
     private JFrame studentFrame=new JFrame();
     JPanel mainPanel = new JPanel(new CardLayout());
     JPanel queryPanel = new JPanel();
@@ -17,6 +18,7 @@ public class StudentFrame extends QAFrame implements Searchable{
     JLabel noReseltLabel = new JLabel();
     JTextArea qArea = new JTextArea();
     JLabel RecentQueriesLabel = new JLabel("Recent Queries");
+    JButton userCenterButton = new JButton();
     public StudentFrame(User user) {
         this.user = user;
         Frametitle="Students QA_System";
@@ -37,8 +39,8 @@ public class StudentFrame extends QAFrame implements Searchable{
         studentFrame.setLocation((screenSize.width - 1000) / 2, (screenSize.height - 700) / 2);
 
         // 面板设置
-        mainPanel.add(recentPanel,"recent");
         mainPanel.add(queryPanel, "query");
+        mainPanel.add(recentPanel,"recent");
 
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
@@ -53,6 +55,7 @@ public class StudentFrame extends QAFrame implements Searchable{
 
         studentFrame.add(toolBar, BorderLayout.NORTH);
         queryPanelComponents(queryPanel);
+
         
 
         studentFrame.add(mainPanel);
@@ -67,14 +70,12 @@ public class StudentFrame extends QAFrame implements Searchable{
             CardLayout cl = (CardLayout) (mainPanel.getLayout());
             cl.show(mainPanel, "recent");
             recentPanelInitital();
-
         });
     }
 
     public void queryPanelComponents(JPanel queryPanel) {
         queryPanel.setLayout(null);
-        
-        JLabel userLabel = addLabel(user.getName(),10,10,200,25,queryPanel);
+        userCenterButton = addButton(user.getName(),10,10,100,25,queryPanel);
         JLabel qLabel = addLabel("Query your question:",150,20,200,25,queryPanel);
         qLabel.setFont(font);
         noReseltLabel = addLabel("No results found.",250,165,200,35,queryPanel);
@@ -93,21 +94,23 @@ public class StudentFrame extends QAFrame implements Searchable{
         queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel,user));
         JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-             dispose();
+            studentFrame.dispose();
             new LoginFrame();
-            
         });
 
+        userCenterButton.addActionListener(e -> {
+            new CenterFrame(user);
+        });
 
     }
-    private void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel,User user) {
+    void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel, User user) {
         if (qArea.getText().trim().isEmpty()) {
             return;
         }
         QA qa[] = searchable(user.getId(),qArea.getText());
         JPanel rollPanel = new JPanel();
         rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-        //  clearErrorLabels(queryPanel, noReseltLabel);
+        clearErrorLabels(queryPanel, noReseltLabel);
         isScrollPanePresent(queryPanel,"scrollPane");
         queryPanel.remove(noReseltLabel);
 
@@ -128,11 +131,14 @@ public class StudentFrame extends QAFrame implements Searchable{
 
     public void recentPanelInitital() {
         recentPanel.setLayout(null);
-        RecentQueriesLabel.setBounds(375, 50, 250, 25);
+        userCenterButton = addButton(user.getName(),10,10,100,25,recentPanel);
+        RecentQueriesLabel.setBounds(0, 50, 1000, 60);
+        RecentQueriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        RecentQueriesLabel.setFont(font1);
         recentPanel.add(RecentQueriesLabel);
        
         
-        JButton querybutton = addButton("Query", 700, 150, 80, 25, recentPanel);
+        JButton querybutton = addButton("Query", 700, 150, 80, 30, recentPanel);
         recentPanel.add(RecentQueriesLabel);
         RecentQueriesLabel.setFont(font);
         
@@ -143,10 +149,7 @@ public class StudentFrame extends QAFrame implements Searchable{
         recentPanel.add(questionComboBox);
         recentPanel.repaint();
         
-        questionComboBox.setPreferredSize(new Dimension(questionComboBox.getPreferredSize().width, 20)); 
-
-        
-        questionComboBox.setBounds(300,150,300,20);
+        questionComboBox.setBounds(320,150,360,30);
         String selectedOption = (String) questionComboBox.getSelectedItem();
 
         
@@ -160,11 +163,15 @@ public class StudentFrame extends QAFrame implements Searchable{
             }
         });
         recentPanel.add(querybutton);
-        //recentPanel.add(userCenterButton);
         JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-             new LoginFrame();
-            dispose();
+            studentFrame.dispose();
+            new LoginFrame();
+
+        });
+        recentPanel.add(quitButton);
+        userCenterButton.addActionListener(e -> {
+            new CenterFrame(user);
         });
     }
     private void generateQAResults(JPanel panel, QA qa[]) {  //学生端显示有问题
