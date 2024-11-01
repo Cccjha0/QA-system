@@ -14,7 +14,7 @@ public class CenterFrame extends JFrame {
     private JLabel userlabel = new JLabel();
     private JButton resetButton = new JButton("Reset Password");
 
-    public CenterFrame(User user) {
+    private CenterFrame(User user) {
         this.user = user;
         FrameComponents();
     }
