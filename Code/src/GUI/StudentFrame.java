@@ -99,7 +99,8 @@ public class StudentFrame extends QAFrame implements Searchable{
         });
 
         userCenterButton.addActionListener(e -> {
-            new CenterFrame(user);
+            CenterFrame.getInstance(user);
+            //new CenterFrame(user);
         });
 
     }
@@ -171,7 +172,8 @@ public class StudentFrame extends QAFrame implements Searchable{
         });
         recentPanel.add(quitButton);
         userCenterButton.addActionListener(e -> {
-            new CenterFrame(user);
+            CenterFrame.getInstance(user);
+            //new CenterFrame(user);
         });
     }
     private void generateQAResults(JPanel panel, QA qa[]) {  //学生端显示有问题

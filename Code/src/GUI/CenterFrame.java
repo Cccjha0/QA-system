@@ -7,14 +7,32 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class CenterFrame extends JFrame{
+public class CenterFrame extends JFrame {
+
     private User user;
-    private JLabel userlabel =new JLabel();
+    private static CenterFrame instance = null; // Singleton instance
+    private JLabel userlabel = new JLabel();
     private JButton resetButton = new JButton("Reset Password");
-    public CenterFrame(User user){
-        this.user=user;
+
+    public CenterFrame(User user) {
+        this.user = user;
         FrameComponents();
     }
+
+    public static CenterFrame getInstance(User user) {
+        if (instance == null) {
+            instance = new CenterFrame(user);
+            instance.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    instance = null; // 当窗口关闭时，将实例设为 null
+                    System.out.print("hello");
+                }
+            });
+        }
+        return instance;
+    }
+
     void FrameComponents() {
         setSize(300, 200);
         setTitle("Personal Center");
@@ -38,11 +56,10 @@ public class CenterFrame extends JFrame{
         CenterPanel.add(resetButton);
         CenterPanel.add(userlabel);
 
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                    dispose();
+                dispose();
             }
         });
 
