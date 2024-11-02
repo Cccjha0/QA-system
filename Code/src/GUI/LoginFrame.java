@@ -24,14 +24,14 @@ public class LoginFrame extends QAFrame implements Loginable {
     JPanel registerpanel = new JPanel();
 
     public LoginFrame() {
-        super("Login Frame");
+        super("Login");
         FrameComponents();
     }
     @Override
     void FrameComponents() {
         loginframe.setSize(400, 250);
         loginframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        loginframe.setResizable(false);
         loginframe.setLocation((screenWidth - 400) / 2, (screenHeight - 250) / 2);
 
         mainpanel.add(loginpanel, "login");
@@ -147,6 +147,8 @@ public class LoginFrame extends QAFrame implements Loginable {
                 int id = backend.UserDAO.registerUser(newUser);
                 
                 if (id != 0) {
+                    userText.setText("");
+                    passwordText.setText("");
                     registerSuccessFrame(id);
                 } else {
                     JOptionPane.showMessageDialog(null, "注册失败", "错误", JOptionPane.ERROR_MESSAGE);
@@ -158,6 +160,8 @@ public class LoginFrame extends QAFrame implements Loginable {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                userText.setText("");
+                passwordText.setText("");
                 switchToPanel("login", "Login");
             }
         });

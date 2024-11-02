@@ -33,6 +33,7 @@ public class StudentFrame extends QAFrame implements Searchable{
         // 窗口设置
         studentFrame.setSize(1000, 700);
         studentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        studentFrame.setResizable(false);
         studentFrame.setTitle(Frametitle);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
@@ -65,6 +66,8 @@ public class StudentFrame extends QAFrame implements Searchable{
         queryButton.addActionListener(e -> {
             CardLayout cl = (CardLayout) (mainPanel.getLayout());
             cl.show(mainPanel, "query");
+            recentPanel.removeAll();
+            
         });
         recentButton.addActionListener(e -> {
             CardLayout cl = (CardLayout) (mainPanel.getLayout());
@@ -92,10 +95,9 @@ public class StudentFrame extends QAFrame implements Searchable{
 
         JButton queryButton = addButton("Query",145,165,80,35,queryPanel);
         queryButton.addActionListener(e -> handleQuery(qArea, queryPanel,noReseltLabel,user));
-        JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
+        JButton quitButton = addButton("Quit",20,570,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-            studentFrame.dispose();
-            new LoginFrame();
+            restartApplication();
         });
 
         userCenterButton.addActionListener(e -> {
@@ -106,6 +108,7 @@ public class StudentFrame extends QAFrame implements Searchable{
     }
     void handleQuery(JTextArea qArea, JPanel queryPanel, JLabel noReseltLabel, User user) {
         if (qArea.getText().trim().isEmpty()) {
+            isScrollPanePresent(queryPanel,"scrollPane");
             return;
         }
         QA qa[] = searchable(user.getId(),qArea.getText());
@@ -125,7 +128,6 @@ public class StudentFrame extends QAFrame implements Searchable{
         }else{
             showLabel(queryPanel, noReseltLabel);
         }
-
         queryPanel.revalidate();
         queryPanel.repaint();
     }
@@ -164,10 +166,9 @@ public class StudentFrame extends QAFrame implements Searchable{
             }
         });
         recentPanel.add(querybutton);
-        JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
+        JButton quitButton = addButton("Quit",20,570,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-            studentFrame.dispose();
-            new LoginFrame();
+            restartApplication();
 
         });
         recentPanel.add(quitButton);
@@ -175,6 +176,8 @@ public class StudentFrame extends QAFrame implements Searchable{
             CenterFrame.getInstance(user);
             //new CenterFrame(user);
         });
+        //recentPanel.revalidate();
+        //recentPanel.repaint();
     }
     private void generateQAResults(JPanel panel, QA qa[]) {  //学生端显示有问题
         int i = 0;

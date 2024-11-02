@@ -50,4 +50,20 @@ public abstract class QAFrame extends JFrame{
         panel.revalidate();
         panel.repaint();
     }
+    static void restartApplication() {
+        try {
+            // 获取当前 Java 运行时和类路径
+            String javaBin = System.getProperty("java.home") + "/bin/java";
+            String classPath = System.getProperty("java.class.path");
+            String className = "APPMain";
+
+            // 构建命令行参数，重新启动当前程序
+            ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classPath, className);
+            builder.start(); // 启动新进程
+
+            System.exit(0); // 退出当前程序
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

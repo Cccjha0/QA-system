@@ -18,16 +18,16 @@ import java.util.List;
 public class LecturerFrame extends StudentFrame implements Editable{
     public LecturerFrame(User user) {
         super(user);
-        Frametitle = "Lecture QA_System";
     }
      void FrameComponents() {
         // 窗口设置
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
         setLocation((screenSize.width - 1000) / 2, (screenSize.height - 700) / 2);
-        setTitle(Frametitle);
+        setTitle("Lecture QA_System");
 
         // 面板设置
         JPanel mainPanel = new JPanel(new CardLayout());
@@ -72,7 +72,7 @@ public class LecturerFrame extends StudentFrame implements Editable{
 
     public void InputPanelComponents(JPanel inputPanel) {
         inputPanel.setLayout(null);
-        JLabel userLabel = addLabel(user.getName(),10,10,200,25,inputPanel);
+        userCenterButton = addButton(user.getName(),10,10,100,25,inputPanel);
         JLabel qLabel = addLabel("Input your question:",150,20,200,25,inputPanel);
         qLabel.setFont(font);
         JLabel aLabel = addLabel("Input your answer:",150,170,200,25,inputPanel);
@@ -121,13 +121,19 @@ public class LecturerFrame extends StudentFrame implements Editable{
         });
 
         JButton quitButton = new JButton("Quit");
-        quitButton.setBounds(20, 590, 80, 35);
+        quitButton.setBounds(20, 570, 80, 35);
         inputPanel.add(quitButton);
-        quitButton.addActionListener(e -> System.exit(0));
+        quitButton.addActionListener(e -> {
+            restartApplication();
+        });
+        userCenterButton.addActionListener(e -> {
+            CenterFrame.getInstance(user);
+            //new CenterFrame(user);
+        });
     }
     public void lectureRecentPanelInitital() {
         recentPanel.setLayout(null);
-        JLabel userLabel = addLabel(user.getName(),10,10,200,25,recentPanel);
+        userCenterButton = addButton(user.getName(),10,10,100,25,recentPanel);
         RecentQueriesLabel.setBounds(0, 50, 1000, 60);
         RecentQueriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
         RecentQueriesLabel.setFont(font1);
@@ -139,35 +145,36 @@ public class LecturerFrame extends StudentFrame implements Editable{
         RecentQueriesLabel.setFont(font);
 
         List<String> listQuestion = RecentQueriesDAO.getRecentQueries(user.getId());
+        int i = listQuestion.size();
         String[] question= listQuestion.toArray(new String[0]);
 
         JComboBox questionComboBox = new JComboBox<>(question);
         recentPanel.add(questionComboBox);
         recentPanel.repaint();
 
-        //questionComboBox.setPreferredSize(new Dimension(questionComboBox.getPreferredSize().width, 20));
-
-
         questionComboBox.setBounds(320,150,360,30);
-        String selectedOption = (String) questionComboBox.getSelectedItem();
-
 
         querybutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchPanel(mainPanel,"query");
-                searchable(user.getId(),selectedOption);
-                qArea.setText(selectedOption);
-                handleQuery(qArea,queryPanel,noReseltLabel,user);
+                String selectedOption = (String) questionComboBox.getSelectedItem();
+                if (!selectedOption.isEmpty()) {
+                    switchPanel(mainPanel, "query");
+                    searchable(user.getId(), selectedOption);
+                    qArea.setText(selectedOption);
+                    handleQuery(qArea, queryPanel, noReseltLabel, user);
+                }
             }
         });
         recentPanel.add(querybutton);
         //recentPanel.add(userCenterButton);
-        JButton quitButton = addButton("Quit",20,590,80,35,queryPanel);
+        JButton quitButton = addButton("Quit",20,570,80,35,queryPanel);
         quitButton.addActionListener(e -> {
-            dispose();
-            new LoginFrame();
-
+            restartApplication();
+        });
+        userCenterButton.addActionListener(e -> {
+            CenterFrame.getInstance(user);
+            //new CenterFrame(user);
         });
         recentPanel.add(quitButton);
     }
