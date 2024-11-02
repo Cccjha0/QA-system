@@ -16,9 +16,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LecturerFrame extends StudentFrame implements Editable{
+    
+    
     public LecturerFrame(User user) {
         super(user);
     }
+    
+    @Override
      void FrameComponents() {
         // 窗口设置
         setSize(1000, 700);
@@ -30,8 +34,7 @@ public class LecturerFrame extends StudentFrame implements Editable{
         setTitle("Lecture QA_System");
 
         // 面板设置
-        JPanel mainPanel = new JPanel(new CardLayout());
-        JPanel queryPanel = new JPanel();
+        
         JPanel inputPanel = new JPanel();
         mainPanel.add(queryPanel, "query");
         mainPanel.add(inputPanel, "input");
@@ -54,19 +57,26 @@ public class LecturerFrame extends StudentFrame implements Editable{
         add(toolBar, BorderLayout.NORTH);
         queryPanelComponents(queryPanel);
         InputPanelComponents(inputPanel);
-        lectureRecentPanelInitital();
+        
 
         add(mainPanel);
         setVisible(true);
 
         // 使用抽取的方法进行切换
-        queryButton.addActionListener(e -> switchPanel(mainPanel, "query"));
+        queryButton.addActionListener(e -> {
+            switchPanel(mainPanel, "query");
+            recentPanel.removeAll();
+        });
         inputButton.addActionListener(e -> switchPanel(mainPanel, "input"));
-        recentButton.addActionListener(e -> switchPanel(mainPanel, "recent"));
+        recentButton.addActionListener(e -> {
+            switchPanel(mainPanel, "recent");
+            lectureRecentPanelInitital();
+            
+        });
     }
 
     private void switchPanel(JPanel panel, String name) {
-        CardLayout cl = (CardLayout) panel.getLayout();
+        CardLayout cl = (CardLayout) (panel.getLayout());
         cl.show(panel, name);
     }
 
@@ -145,7 +155,6 @@ public class LecturerFrame extends StudentFrame implements Editable{
         RecentQueriesLabel.setFont(font);
 
         List<String> listQuestion = RecentQueriesDAO.getRecentQueries(user.getId());
-        int i = listQuestion.size();
         String[] question= listQuestion.toArray(new String[0]);
 
         JComboBox questionComboBox = new JComboBox<>(question);
@@ -158,12 +167,10 @@ public class LecturerFrame extends StudentFrame implements Editable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedOption = (String) questionComboBox.getSelectedItem();
-                if (!selectedOption.isEmpty()) {
-                    switchPanel(mainPanel, "query");
-                    searchable(user.getId(), selectedOption);
-                    qArea.setText(selectedOption);
-                    handleQuery(qArea, queryPanel, noReseltLabel, user);
-                }
+                switchPanel(mainPanel, "query");
+                searchable(user.getId(),selectedOption);
+                qArea.setText(selectedOption);
+                handleQuery(qArea, queryPanel, noReseltLabel, user);
             }
         });
         recentPanel.add(querybutton);
