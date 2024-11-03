@@ -8,11 +8,19 @@ import backend.*;
 import java.sql.*;
 
 /**
- *
+ * QADAO class provides methods to interact with the QA table in the database.
+ * It allows inserting new QA entries and searching for QA entries based on keywords.
+ * 
  * @author 陈炯昊
  */
 public class QADAO {
 
+    /**
+     * Inserts a QA entry into the database.
+     *
+     * @param qa The QA object containing the question, answer, and creator's ID
+     * @return true if the insertion was successful, false otherwise
+     */
     public static boolean insertQA(QA qa) {
         String query = "INSERT INTO QA (question, answer, created_by) VALUES (?, ?, ?)";
         try ( Connection connection = DatabaseConnection.getConnection();  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -21,6 +29,7 @@ public class QADAO {
             statement.setInt(3, qa.getCreatedBy());
             statement.executeUpdate();
         } catch (SQLException e) {
+            // Print the stack trace if an SQL exception occurs
             e.printStackTrace();
             return false;
         }
@@ -28,11 +37,13 @@ public class QADAO {
     }
 
     /**
+     * Searches for QA entries in the database that match the given keyword.
+     * If no matching QA is found, returns null.
      *
-     *return null -> not found Q&A
-     *
-     **/
-    
+     * @param userId The ID of the user performing the search
+     * @param keyword The keyword to search for in the question field
+     * @return An array of QA objects that match the keyword, or null if none found
+     */
     public static QA[] searchQA(int userId, String keyword) {
         QA qa[] = null;
         int cnt = 0;
@@ -43,11 +54,11 @@ public class QADAO {
             statement.setString(1, "%" + keyword + "%");
             ResultSet rs = statement.executeQuery();
             
-            if (!rs.next()) {  // 直接使用 next() 检查
+            if (!rs.next()) {  // If no results are found, return null
                 return qa;
             }
-            qa = new QA[100];
-            do { // 使用 do-while 处理至少有一条结果的情况
+            qa = new QA[100]; // Initialize an array to hold up to 100 QA entries
+            do { // Process at least one result if found
                 String question = rs.getString("question");
                 String answer = rs.getString("answer");
                 int createdBy = rs.getInt("created_by");
@@ -62,10 +73,11 @@ public class QADAO {
             } while (rs.next());
             
         } catch (SQLException e) {
+            // Print the stack trace if an SQL exception occurs
             e.printStackTrace();
         }
         
-        //将查询更新到RecentQueries表中
+        // Save or update the search query in the RecentQueries table
         RecentQueriesDAO.saveOrUpdateQuery(userId, keyword);
 
         return qa; 

@@ -9,12 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * RecentQueriesDAO class provides methods to manage recent search queries in the database.
+ * It allows saving or updating recent queries and retrieving the last 10 queries made by a user.
+ * 
  * @author 陈炯昊
  */
 public class RecentQueriesDAO {
 
-    // 添加查询记录，并控制记录数量上限
+    /**
+     * Saves or updates a user's recent query in the database.
+     * If the user already has a matching query, its timestamp is updated.
+     * If the user has more than 15 queries, the oldest one is removed.
+     *
+     * @param userId The ID of the user making the query
+     * @param queryText The text of the query to save or update
+     */
     public static void saveOrUpdateQuery(int userId, String queryText) {
         String updateQuery = "UPDATE RecentQuery SET query_time = CURRENT_TIMESTAMP WHERE user_id = ? AND query_text = ?";
         String insertQuery = "INSERT INTO RecentQuery (user_id, query_text) VALUES (?, ?)";
@@ -23,20 +32,20 @@ public class RecentQueriesDAO {
 
         try ( Connection conn = DatabaseConnection.getConnection()) {
 
-            // 更新现有相同查询的时间戳
+            // Update the timestamp of an existing matching query
             try ( PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
                 updateStmt.setInt(1, userId);
                 updateStmt.setString(2, queryText);
                 int rowsAffected = updateStmt.executeUpdate();
 
-                // 如果没有相同查询记录，则插入新记录
+                // If no matching query record exists, insert a new record
                 if (rowsAffected == 0) {
-                    // 检查用户的查询记录数是否超过 15 条
+                    // Check if the user has more than 15 query records
                     try ( PreparedStatement countStmt = conn.prepareStatement(countQuery)) {
                         countStmt.setInt(1, userId);
                         ResultSet rs = countStmt.executeQuery();
                         if (rs.next() && rs.getInt(1) >= 15) {
-                            // 删除最早的记录
+                            // Delete the oldest record
                             try ( PreparedStatement deleteStmt = conn.prepareStatement(deleteOldestQuery)) {
                                 deleteStmt.setInt(1, userId);
                                 deleteStmt.executeUpdate();
@@ -44,7 +53,7 @@ public class RecentQueriesDAO {
                         }
                     }
 
-                    // 插入新记录
+                    // Insert a new record
                     try ( PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
                         insertStmt.setInt(1, userId);
                         insertStmt.setString(2, queryText);
@@ -58,7 +67,12 @@ public class RecentQueriesDAO {
         }
     }
 
-    // 获取用户的最近10条查询记录
+    /**
+     * Retrieves the most recent 10 queries made by a user.
+     *
+     * @param userId The ID of the user whose queries are being retrieved
+     * @return A list of the most recent 10 queries made by the user
+     */
     public static List<String> getRecentQueries(int userId) {
         List<String> recentQueries = new ArrayList<>();
         String query = "SELECT query_text FROM RecentQuery WHERE user_id = ? ORDER BY query_time DESC FETCH FIRST 10 ROWS ONLY";

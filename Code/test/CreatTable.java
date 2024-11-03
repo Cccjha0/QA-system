@@ -5,8 +5,12 @@
 import java.sql.*;
 
 /**
- *
- * @author wang
+ * CreatTable class is used to execute SQL statements against the Apache Derby database.
+ * It includes functionality to create tables, delete entries, and manage the database schema.
+ * 
+ * Note: The provided SQL statements for creating tables are commented out for easy modification.
+ * 
+ * Author: wang
  */
 public class CreatTable {
 
@@ -24,13 +28,14 @@ public class CreatTable {
 //                    + "password VARCHAR(255) NOT NULL, name  VARCHAR(255) NOT NULL,"
 //                    + "isStudent BOOLEAN NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
             
-            String sql = "CREATE TABLE RecentQuery (\n"
-                    + "    query_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,\n"
-                    + "    user_id INT,\n"
-                    + "    query_text VARCHAR(1023),\n"
-                    + "    query_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n"
-                    + "    FOREIGN KEY (user_id) REFERENCES Users(id)\n"
-                    + ")";
+//            String sql = "CREATE TABLE RecentQuery (\n"
+//                    + "    query_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,\n"
+//                    + "    user_id INT,\n"
+//                    + "    query_text VARCHAR(1023),\n"
+//                    + "    query_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n"
+//                    + "    FOREIGN KEY (user_id) REFERENCES Users(id)\n"
+//                    + ")";
+            String sql = "DELETE FROM QA WHERE ID = 1001";
             stmt.executeUpdate(sql);
             System.out.println("表创建成功");
         } catch (Exception e) {

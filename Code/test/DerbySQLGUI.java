@@ -4,8 +4,8 @@
  */
 
 /**
- *
- * @author 陈炯昊
+ * DerbySQLGUI is a simple graphical user interface (GUI) for executing SQL queries
+ * on an Apache Derby database. It allows users to input SQL commands and view the results.
  */
 
 import java.sql.*;

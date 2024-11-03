@@ -4,22 +4,34 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/Git/QA-system/Code/src/backend/QADAO.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/backend/UserDAO.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/GUI/ResetPasswordFrame.java</file>
             <file>file:/E:/Git/QA-system/Code/src/GUI/LecturerFrame.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/GUI/QAFrame.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/APPMain.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/GUI/Loginable.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/RecentQueriesDAOTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/GUI/StudentFrameTest.java</file>
             <file>file:/E:/Git/QA-system/Code/test/DerbySQLGUI.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/backend/RecentQueriesDAO.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/GUI/StudentFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/QATest.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/QADAOTest.java</file>
             <file>file:/E:/Git/QA-system/Code/test/CreatTable.java</file>
             <file>file:/E:/Git/QA-system/Code/src/GUI/Editable.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/GUI/LoginFrame.java</file>
-            <file>file:/E:/Git/QA-system/Code/src/backend/DatabaseConnection.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/GUI/LecturerFrameTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/GUI/LoginFrameTest.java</file>
             <file>file:/E:/Git/QA-system/Code/src/GUI/Searchable.java</file>
             <file>file:/E:/Git/QA-system/Code/src/backend/QA.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/backend/UserDAO.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/GUI/ResetPasswordFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/GUI/CenterFrameTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/UserTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/GUI/QAFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/APPMain.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/DatabaseConnectionTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/GUI/Loginable.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/GUI/ResetPasswordFrameTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/backend/RecentQueriesDAO.java</file>
+            <file>file:/E:/Git/QA-system/Code/test/backend/UserDAOTest.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/GUI/StudentFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/GUI/LoginFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/backend/DatabaseConnection.java</file>
             <file>file:/E:/Git/QA-system/Code/src/GUI/BaseFrame.java</file>
+            <file>file:/E:/Git/QA-system/Code/src/backend/User.java</file>
             <file>file:/E:/Git/QA-system/Code/src/GUI/CenterFrame.java</file>
         </group>
     </open-files>
