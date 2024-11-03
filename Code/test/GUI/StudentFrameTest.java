@@ -68,11 +68,11 @@ public class StudentFrameTest {
         studentFrame.initializeQueryPanel(queryPanel);
 
         // 验证查询面板中是否包含特定组件
-        assertNotNull(queryPanel.getComponent(0)); // 检查用户中心按钮
-        assertNotNull(queryPanel.getComponent(1)); // 检查标签
-        assertNotNull(queryPanel.getComponent(2)); // 检查查询文本区域
-        assertNotNull(queryPanel.getComponent(3)); // 检查查询按钮
-        assertNotNull(queryPanel.getComponent(4)); // 检查退出按钮
+        assertNotNull(queryPanel.getComponent(0)); 
+        assertNotNull(queryPanel.getComponent(1));
+        assertNotNull(queryPanel.getComponent(2)); 
+        assertNotNull(queryPanel.getComponent(3)); 
+        assertNotNull(queryPanel.getComponent(4)); 
     }
 
     /**
