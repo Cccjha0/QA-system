@@ -68,13 +68,8 @@ public class StudentFrameTest {
         studentFrame.initializeQueryPanel(queryPanel);
 
         // 验证查询面板中是否包含特定组件
-<<<<<<< HEAD
-        assertNotNull(queryPanel.getComponent(0));
-        assertNotNull(queryPanel.getComponent(1)); 
-=======
         assertNotNull(queryPanel.getComponent(0)); 
         assertNotNull(queryPanel.getComponent(1));
->>>>>>> a26087a0a8d848afa9454a7266dfaf0cc2a9e1eb
         assertNotNull(queryPanel.getComponent(2)); 
         assertNotNull(queryPanel.getComponent(3)); 
         assertNotNull(queryPanel.getComponent(4)); 
