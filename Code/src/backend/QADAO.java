@@ -4,7 +4,6 @@
  */
 package backend;
 
-import backend.*;
 import java.sql.*;
 
 /**
