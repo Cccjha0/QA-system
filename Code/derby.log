@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Nov 04 21:32:04 CST 2024:
+Mon Nov 04 21:50:34 CST 2024:
 正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@6659c656 引导数据库
-目录 E:\Git\QA-system\db\QAsystemDB 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585) 实例 a816c00e-0192-f760-1cd6-00000f5fba88
+目录 E:\Git\QA-system\db\QAsystemDB 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585) 实例 a816c00e-0192-f771-0e44-00000ea45008
 已从 file:/E:/Git/QA-system/Code/lib/derby.jar 加载
 java.vendor=Oracle Corporation
 java.runtime.version=11.0.19+9-LTS-224

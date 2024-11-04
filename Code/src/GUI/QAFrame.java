@@ -157,6 +157,12 @@ public abstract class QAFrame extends BaseFrame {
         // Clear existing components with old data
         recentPanel.removeAll();
         recentPanel.repaint();
+        
+        JLabel RecentQueriesLabel = new JLabel("Recent Queries");
+        RecentQueriesLabel.setBounds(0, 50, 1000, 60);
+        RecentQueriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        RecentQueriesLabel.setFont(font);
+        recentPanel.add(RecentQueriesLabel);
 
         // Get the latest query records
         List<String> listQuestion = RecentQueriesDAO.getRecentQueries(user.getId());
