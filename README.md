@@ -1,6 +1,7 @@
 # README
 <details>
 <summary>中文</summary>
+
 # QA系统
 
 这是一个基于Java开发的问答（QA）系统，旨在为用户提供便捷的问答服务。该系统支持用户登录、问题查询等功能，适用于讲师和学生等不同角色。
@@ -50,6 +51,7 @@
 
 <details>
 <summary>English</summary>
+
 # QA System
 
 This is a Java-based Question and Answer (QA) system designed to provide a convenient platform for users to ask and answer questions. The system supports login functionality for different roles, such as lecturers and students, and allows users to query existing questions.
